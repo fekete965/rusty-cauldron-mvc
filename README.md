@@ -14,6 +14,9 @@ In order to run the application, you will need to generate a secret key using th
 
 Then you can assing that value to `RUSTY_CAULDRON_KEY` environment variable.
 
+To prepase the databse run the following command:
+`bash python ./prepare-database.py`
+
 To run the application in debug, run the following command:
 `bash flask --debug run`
 

@@ -1,14 +1,17 @@
 from flask import abort, make_response, redirect, render_template, request, session
 from flask_login import login_required, login_user, logout_user
-from constants import ROUTES, SESSION_TOKEN
-from utils import isUrlSafe
+
+from utils.main import isUrlSafe
+from constants import ROUTES
 from app import App
 
+# Define Home route
 @App.route(ROUTES.Home)
 def index():
     return render_template("index.html")
 
 
+# Define Signup route
 @App.route(ROUTES.Signup, methods=["GET", "POST"])
 def signUp():
 	if (request.method == "GET"):
@@ -18,6 +21,7 @@ def signUp():
 	return redirect(ROUTES.Login)
 
 
+# Define Login route
 @App.route(ROUTES.Login, methods=["GET", "POST"])
 def login():
     if (request.method == "GET"):
@@ -34,6 +38,7 @@ def login():
     return resp
 
 
+# Define Logout route
 @App.route(ROUTES.Logout, methods=["POST"])
 @login_required
 def logout():
@@ -42,6 +47,7 @@ def logout():
 	return redirect("/")
 
 
+# Define Recipes route
 @App.route(ROUTES.Recipes, methods=["GET", "POST"])
 def recipes():
     if (request.method == "GET"):
@@ -51,6 +57,7 @@ def recipes():
     return render_template("recipes.html")
 
 
+# Define Add Recipe route
 @App.route(ROUTES.AddRecipe, methods=["GET", "POST"])
 @login_required
 def addRecipe():
@@ -61,6 +68,7 @@ def addRecipe():
     return redirect(ROUTES.AddRecipe)
 
 
+# Define Edit Recipe route
 @App.route(ROUTES.EditRecipe, methods=["GET", "PUT"])
 @login_required
 def editRecipe(id):
@@ -72,6 +80,7 @@ def editRecipe(id):
     return redirect(ROUTES.EditRecipe.replace("<id>", id))
 
 
+# Define My Recipes route
 @App.route(ROUTES.MyRecipes)
 @login_required
 def userRecipes():
@@ -79,6 +88,7 @@ def userRecipes():
 	return render_template("my-recipes.html")
 
 
+# Define 404 page
 @App.errorhandler(404)
 def notFoundPage(error):
     return render_template('not-found-page.html'), 404

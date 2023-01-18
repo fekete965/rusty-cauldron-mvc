@@ -1,36 +1,36 @@
 import os, glob
 from sqlite3 import connect, OperationalError
 
-from utils.main import getDatabasePath 
+from utils.main import get_database_path 
 
 # Define the path of the database
-databasePath = getDatabasePath()
+database_path = get_database_path()
 # Connect to our database
-connection = connect(databasePath)
+connection = connect(database_path)
 # Create a cursor
 cursor = connection.cursor()
 
 # Define a function which reads a sql file and
-def readAndExecuteSql(filePathAndName: str):
-    def filterHelper(cmd: str):
+def read_and_execute_sql(file_path_and_name: str):
+    def filter_helper(cmd: str):
         return len(cmd) != 0 and not cmd.isspace()
     #
-    if not filePathAndName.endswith(".sql"):
-        raise Exception(f"{filePathAndName} is not a SQL file!")
+    if not file_path_and_name.endswith(".sql"):
+        raise Exception(f"{file_path_and_name} is not a SQL file!")
     
-    filename = filePathAndName.split("/")[-1]
+    filename = file_path_and_name.split("/")[-1]
     print(f"Opening: {filename}")
 
     # Open the file
-    buffer = open(filePathAndName, "r")
+    buffer = open(file_path_and_name, "r")
     # Read the file in memory
-    sqlFile = buffer.read()
+    sql_file = buffer.read()
     # Split sql commands into a list if needed and remove spaces and new lines
-    sqlCommands = list(filter(filterHelper, sqlFile.split(";")))
+    sql_commands = list(filter(filter_helper, sql_file.split(";")))
     
     # Iterate on the command list and execute them + raise any errors
-    print(f"Running {len(sqlCommands)} SQL command(s)")
-    for command in sqlCommands:
+    print(f"Running {len(sql_commands)} SQL command(s)")
+    for command in sql_commands:
         try:
             cursor.execute(command)
         except OperationalError as msg:
@@ -41,8 +41,8 @@ def readAndExecuteSql(filePathAndName: str):
     buffer.close()
 
 # Get all migration files
-migrationFiles = os.path.join(os.getcwd(), "migrations", "*.sql")
+migration_files = os.path.join(os.getcwd(), "migrations", "*.sql")
 # Read all SQL files from the migrations folder
-for filename in glob.glob(migrationFiles, recursive=False):
-    pathAndName = os.path.join(os.getcwd(), filename)
-    readAndExecuteSql(pathAndName)
+for filename in glob.glob(migration_files, recursive=False):
+    path_and_name = os.path.join(os.getcwd(), filename)
+    read_and_execute_sql(path_and_name)

@@ -2,7 +2,7 @@ from curses import flash
 from flask import abort, make_response, redirect, render_template, request, session
 from flask_login import login_required, login_user, logout_user
 
-from utils.main import isUrlSafe, validatePassword
+from utils.main import is_url_safe, validate_password
 from constants import ROUTES
 from app import App
 
@@ -19,18 +19,18 @@ def signUp():
 		return render_template("signup.html")
 
 	# Gather form values
-	firstName = request.form.get("firstName")
-	lastName = request.form.get("lastName")
+	first_name = request.form.get("firstName")
+	last_name = request.form.get("lastName")
 	email = request.form.get("email")
 	password = request.form.get("password")
 	confirmation = request.form.get("confirmation")
 
 	# Check first name
-	if not firstName:
+	if not first_name:
 		flash("First name is required")
 		return render_template("signup.html"), 400
 	# Check last name
-	if not lastName:
+	if not last_name:
 		flash("Last name is required")
 		return render_template("signup.html"), 400
 	# Check email
@@ -47,9 +47,9 @@ def signUp():
 		return render_template("signup.html"), 400
 
 	# Validate the password
-	passwordErrorMsg = validatePassword(password, confirmation)
-	if passwordErrorMsg:
-		flash(passwordErrorMsg)
+	password_error_msg = validate_password(password, confirmation)
+	if password_error_msg:
+		flash(password_error_msg)
 		return render_template("signup.html"), 400
 
 	# Check if email is in use
@@ -60,7 +60,7 @@ def signUp():
 		return render_template("signup.html"), 400	
 
 	# Call userService to create a user
- 	# userService.createUser(firstName, lastName, email, password)
+ 	# user_service.create_user(first_name, last_name, email, password)
 	return redirect(ROUTES.Login)
 
 
@@ -84,7 +84,7 @@ def login():
 		return render_template("login.html"), 400
  
 	# Call userService to login the user
- 	# user = userService.loginUser(email, password)
+ 	# user = user_service.login_user(email, password)
 
 	# Prompt the user 
 	if not user:
@@ -93,7 +93,7 @@ def login():
 
 	# Check if next url exists
 	next = request.args.get("next")
-	if not isUrlSafe(next):
+	if not is_url_safe(next):
 		return abort(400)
 
     # Get the user and save it
@@ -126,7 +126,7 @@ def recipes():
 # Define Add Recipe route
 @App.route(ROUTES.AddRecipe, methods=["GET", "POST"])
 @login_required
-def addRecipe():
+def add_recipe():
     if (request.method == "GET"):
         return render_template("add-recipe.html")
     
@@ -137,7 +137,7 @@ def addRecipe():
 # Define Edit Recipe route
 @App.route(ROUTES.EditRecipe, methods=["GET", "PUT"])
 @login_required
-def editRecipe(id):
+def edit_recipe(id):
     if (request.method == "GET"):
         # Get the recipe from the DB based on its id and return it to the user
         return render_template("update-recipe.html")
@@ -149,12 +149,12 @@ def editRecipe(id):
 # Define My Recipes route
 @App.route(ROUTES.MyRecipes)
 @login_required
-def userRecipes():
+def user_recipes():
 	# Get the user's recipes from the DB
 	return render_template("my-recipes.html")
 
 
 # Define 404 page
 @App.errorhandler(404)
-def notFoundPage(error):
+def not_found_page(error):
     return render_template('not-found-page.html'), 404

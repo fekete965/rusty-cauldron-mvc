@@ -2,14 +2,14 @@ from curses import flash
 from flask import abort, make_response, redirect, render_template, request, session
 from flask_login import login_required, login_user, logout_user
 
-from utils.main import is_url_safe, validate_password
+from utils.main import is_url_safe, validate_password, validateIngredients
 from constants import ROUTES
 from app import App
 
 # Define Home route
-@App.route(ROUTES.Home)
+@App.route(ROUTES.Home, methods=["GET"])
 def index():
-    return render_template("index.html")
+	return render_template("index.html")
 
 
 # Define Signup route
@@ -18,30 +18,32 @@ def signUp():
 	if (request.method == "GET"):
 		return render_template("signup.html")
 
-	# Gather form values
-	first_name = request.form.get("firstName")
-	last_name = request.form.get("lastName")
-	email = request.form.get("email")
-	password = request.form.get("password")
-	confirmation = request.form.get("confirmation")
-
 	# Check first name
+	first_name = request.form.get("firstName")
 	if not first_name:
 		flash("First name is required")
 		return render_template("signup.html"), 400
+
 	# Check last name
+	last_name = request.form.get("lastName")
 	if not last_name:
 		flash("Last name is required")
 		return render_template("signup.html"), 400
+
 	# Check email
+	email = request.form.get("email")
 	if not email:
 		flash("Email is required")
 		return render_template("signup.html"), 400
+
 	# Check password
+	password = request.form.get("password")
 	if not password:
 		flash("Password is required")
 		return render_template("signup.html"), 400
+
 	# Check password confirmation
+	confirmation = request.form.get("confirmation")
 	if not confirmation:
 		flash("Please confirm your password")
 		return render_template("signup.html"), 400
@@ -54,7 +56,7 @@ def signUp():
 
 	# Check if email is in use
 	# user = db.execute("SELECT * FROM users WHERE username = ? LIMIT 1;", username)
-
+	user = None # <-- Dummy value for now
 	if len(user) != 0:
 		flash("Email is already in use")
 		return render_template("signup.html"), 400	
@@ -85,7 +87,7 @@ def login():
  
 	# Call userService to login the user
  	# user = user_service.login_user(email, password)
-
+	user = None # <-- Dummy value for now
 	# Prompt the user 
 	if not user:
 		flash("Incorrect email or password")
@@ -96,7 +98,7 @@ def login():
 	if not is_url_safe(next):
 		return abort(400)
 
-    # Get the user and save it
+	# Get the user and save it
 	login_user("", remember=True)
 
 	# Redirect the user
@@ -114,47 +116,136 @@ def logout():
 
 
 # Define Recipes route
-@App.route(ROUTES.Recipes, methods=["GET", "POST"])
+@App.route(ROUTES.Recipes, methods=["GET"])
 def recipes():
-    if (request.method == "GET"):
-        return render_template("recipes.html")
-    
-    # Validate form, filter recipes and return the new data to the user
-    return render_template("recipes.html")
+	args = request.args
+	title = args.get("title")
+	ingredients = args.getlist("ingredients")
+	page = args.getlist("page", 1)
+	page_size = args.getlist("pageSize", 10)
+
+	# Get the last 10 recipes without filtering
+	# recipes = recipe_service.get_recipes(title, ingredients, page, page_size)
+	recipes = None # <-- Dummy value for now
+	return render_template("recipes.html", recipes=recipes)
 
 
 # Define Add Recipe route
 @App.route(ROUTES.AddRecipe, methods=["GET", "POST"])
 @login_required
 def add_recipe():
-    if (request.method == "GET"):
-        return render_template("add-recipe.html")
-    
-    # Validate the form, save the record into the DB and redirect the user
-    return redirect(ROUTES.AddRecipe)
+	if (request.method == "GET"):
+		return render_template("add-recipe.html")
+	# Check title
+	title = request.form.get("title")
+	if not title:
+		flash("Title is required")
+		return render_template("add-recipe.html"), 400
+	# Check preparation time
+	prep_time = request.form.get("prepTime")
+	if (prep_time and not prep_time.isdigit()):
+		flash("Preparation time must be a number")
+		return render_template("add-recipe.html"), 400
+	# Check cooking time
+	cooking_time = request.form.get("cookingTime")
+	if not cooking_time:
+		flash("Cooking time is required")
+		return render_template("add-recipe.html"), 400
+	if not cooking_time.isdigit():
+		flash("Cooking time must be a number")
+		return render_template("add-recipe.html"), 400
+	# Check description
+	description = request.form.get("description")
+	if not description:
+		flash("Description is required")
+		return render_template("add-recipe.html"), 400
+	# Check ingredients
+	ingredients = request.form.getlist("ingredients")
+	ingredients_error_msg = validateIngredients(ingredients)
+	if ingredients_error_msg:
+		flash(ingredients_error_msg)
+		return render_template("add-recipe.html"), 400
+ 
+	# Validate the form, save the record into the DB and redirect the user
+	return redirect(ROUTES.AddRecipe)
 
 
-# Define Edit Recipe route
-@App.route(ROUTES.EditRecipe, methods=["GET", "PUT"])
+# Define Recipe route
+@App.route(ROUTES.Recipe, methods=["DELETE", "GET", "PUT"])
 @login_required
-def edit_recipe(id):
-    if (request.method == "GET"):
-        # Get the recipe from the DB based on its id and return it to the user
-        return render_template("update-recipe.html")
-    
-    # Validate the form, save the record into the DB and redirect the user
-    return redirect(ROUTES.EditRecipe.replace("<id>", id))
+def recipe(id):
+	# Return the recipe information to the user
+	if (request.method == "GET"):
+		# Get the recipe from the DB based on its id and return it to the user
+		# recipe = recipe_service.get_recipe(id)
+		recipe = None # <-- Dummy value for now
+		return render_template("update-recipe.html", recipe=recipe)
+	
+	# Mark recipe as deleted
+	if (request.method == "DELETE"):
+		# Find the recipe, and mark as deleted in the database
+		return render_template("update-recipe.html")
+	
+  	# Check title
+	title = request.form.get("title")
+	if not title:
+		flash("Title is required")
+		return render_template("update-recipe.html"), 400
+
+	# Check preparation time
+	prep_time = request.form.get("prepTime")
+	if (prep_time and not prep_time.isdigit()):
+		flash("Preparation time must be a number")
+		return render_template("update-recipe.html"), 400
+
+	# Check cooking time
+	cooking_time = request.form.get("cookingTime")
+	if not cooking_time:
+		flash("Cooking time is required")
+		return render_template("update-recipe.html"), 400
+	if not cooking_time.isdigit():
+		flash("Cooking time must be a number")
+		return render_template("update-recipe.html"), 400
+
+	# Check description
+	description = request.form.get("description")
+	if not description:
+		flash("Description is required")
+		return render_template("update-recipe.html"), 400
+
+	# Check ingredients
+	ingredients = request.form.getlist("ingredients")
+	ingredients_error_msg = validateIngredients(ingredients)
+	if ingredients_error_msg:
+		flash(ingredients_error_msg)
+		return render_template("update-recipe.html"), 400
+	
+	# Validate the form, save the record into the DB and redirect the user
+	return redirect(ROUTES.Recipe.replace("<id>", id))
 
 
 # Define My Recipes route
-@App.route(ROUTES.MyRecipes)
+@App.route(ROUTES.MyRecipes, methods = ["GET", "POST"])
 @login_required
 def user_recipes():
-	# Get the user's recipes from the DB
-	return render_template("my-recipes.html")
+	recipes = None
 
+	if request.method == "GET":
+		# Get the user's active recipes from the DB based
+		# recipes = recipe_service.get_my_recipes(user_id)
+		return render_template("my-recipes.html", recipes=recipes)
+
+	include_deleted = request.form.get("includeDeleted", False)
+	if include_deleted:
+		# recipes = recipe_service.get_my_recipes(user_id, deleted=true)
+		recipes = None # <-- Dummy value for now
+	else:
+		# recipes = recipe_service.get_my_recipes(user_id)
+		recipes = None # <-- Dummy value for now
+  
+	return render_template("my-recipes.html", recipes=recipes)
 
 # Define 404 page
 @App.errorhandler(404)
 def not_found_page(error):
-    return render_template('not-found-page.html'), 404
+	return render_template('not-found-page.html'), 404

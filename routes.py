@@ -1,5 +1,4 @@
-from curses import flash
-from flask import abort, make_response, redirect, render_template, request, session
+from flask import abort, flash, make_response, redirect, render_template, request, session
 from flask_login import login_required, login_user, logout_user
 
 from utils.main import is_url_safe, validate_password, validateIngredients
@@ -14,45 +13,50 @@ def index():
 
 # Define Signup route
 @App.route(ROUTES.Signup, methods=["GET", "POST"])
-def signUp():
+def sign_up():
 	if (request.method == "GET"):
-		return render_template("signup.html")
+		return render_template("signup.html", form_data=None)
 
-	# Check first name
-	first_name = request.form.get("firstName")
-	if not first_name:
+	form_data = {
+		"first_name": request.form.get("firstName"),
+		"last_name": request.form.get("lastName"),
+		"email": request.form.get("email"),
+		"password": request.form.get("password"),
+		"confirmation": request.form.get("confirmation"),
+	}
+	
+ 	# Check first name
+	if not form_data["first_name"]:
 		flash("First name is required")
-		return render_template("signup.html"), 400
+		return render_template("signup.html", form_data=form_data), 400
 
 	# Check last name
-	last_name = request.form.get("lastName")
-	if not last_name:
+	if not form_data["last_name"]:
 		flash("Last name is required")
-		return render_template("signup.html"), 400
+		return render_template("signup.html", form_data=form_data), 400
 
 	# Check email
-	email = request.form.get("email")
-	if not email:
+	if not form_data["email"]:
 		flash("Email is required")
-		return render_template("signup.html"), 400
+		return render_template("signup.html", form_data=form_data), 400
 
 	# Check password
-	password = request.form.get("password")
-	if not password:
+	if not form_data["password"]:
 		flash("Password is required")
-		return render_template("signup.html"), 400
+		return render_template("signup.html", form_data=form_data), 400
 
 	# Check password confirmation
-	confirmation = request.form.get("confirmation")
-	if not confirmation:
+	if not form_data["confirmation"]:
 		flash("Please confirm your password")
-		return render_template("signup.html"), 400
+		return render_template("signup.html", form_data=form_data), 400
 
 	# Validate the password
-	password_error_msg = validate_password(password, confirmation)
+	password_error_msg = validate_password(form_data["password"], form_data["confirmation"])
 	if password_error_msg:
 		flash(password_error_msg)
-		return render_template("signup.html"), 400
+		form_data.pop("password")
+		form_data.pop("confirmation")
+		return render_template("signup.html", form_data=form_data), 400
 
 	# Check if email is in use
 	# user = db.execute("SELECT * FROM users WHERE username = ? LIMIT 1;", username)

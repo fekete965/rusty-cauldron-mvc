@@ -74,28 +74,31 @@ def sign_up():
 @App.route(ROUTES.Login, methods=["GET", "POST"])
 def login():
 	if (request.method == "GET"):
-		return render_template("login.html")
+		return render_template("login.html", form_data=None)
 
 	# Get form values
-	email = request.form.get("email")
-	password = request.form.get("password")
+	form_data = {
+		"email": request.form.get("email"),
+		"password": request.form.get("password"),
+	}
  
 	# Check email
-	if not email:
+	if not form_data["email"]:
 		flash("Email required")
-		return render_template("login.html"), 400
+		return render_template("login.html", form_data=form_data), 400
 	# Check password
-	if not password:
+	if not form_data["password"]:
 		flash("Password required")
-		return render_template("login.html"), 400
+		return render_template("login.html", form_data=form_data), 400
  
 	# Call userService to login the user
- 	# user = user_service.login_user(email, password)
+ 	# user = user_service.login_user(form_data["email"], form_data["password"])
 	user = None # <-- Dummy value for now
 	# Prompt the user 
 	if not user:
 		flash("Incorrect email or password")
-		return render_template("login.html"), 400
+		form_data.pop("password")
+		return render_template("login.html", form_data=form_data), 400
 
 	# Check if next url exists
 	next = request.args.get("next")

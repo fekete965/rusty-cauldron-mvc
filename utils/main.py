@@ -50,7 +50,7 @@ def is_password_applicable(password: str):
 def validate_password(password: str, confirmation: str):
     """Check if the passwors meets every rules"""
     if len(password) < MIN_PASSWORD_LENGTH:
-        return f"Password has to be at least {MIN_PASSWORD_LENGTH} long"
+        return f"Password has to be at least {MIN_PASSWORD_LENGTH} character long"
     if password != confirmation:
         return "The passwords aren't match"
     if not is_password_applicable(password):

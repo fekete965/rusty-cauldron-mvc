@@ -8,6 +8,7 @@ The project is using the following technologies:
 - flask
 - flask-login
 - flask-sqlalchemy
+- werkzeug
 
 In order to run the application, you will need to generate a secret key using the following command:
 `bash python -c 'import secrets; print(secrets.token_hex())'`

@@ -4,6 +4,7 @@ from flask_login import login_required, login_user, logout_user
 from utils.main import is_url_safe, validate_password, validateIngredients
 from constants import ROUTES
 from app import App
+from werkzeug.security import generate_password_hash, check_password_hash
 
 # Define Home route
 @App.route(ROUTES.Home, methods=["GET"])
@@ -59,14 +60,14 @@ def sign_up():
 		return render_template("signup.html", form_data=form_data), 400
 
 	# Check if email is in use
-	# user = db.execute("SELECT * FROM users WHERE username = ? LIMIT 1;", username)
+	# user = db.execute("SELECT * FROM users WHERE email = ? LIMIT 1;", email)
 	user = None # <-- Dummy value for now
 	if len(user) != 0:
 		flash("Email is already in use")
 		return render_template("signup.html"), 400	
 
 	# Call userService to create a user
- 	# user_service.create_user(first_name, last_name, email, password)
+ 	# user_service.create_user(first_name, last_name, email, generate_password_hash(password))
 	return redirect(ROUTES.Login)
 
 

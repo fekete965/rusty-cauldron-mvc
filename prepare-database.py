@@ -46,3 +46,10 @@ migration_files = os.path.join(os.getcwd(), "migrations", "*.sql")
 for filename in glob.glob(migration_files, recursive=False):
     path_and_name = os.path.join(os.getcwd(), filename)
     read_and_execute_sql(path_and_name)
+
+# Commit all the changes
+connection.commit()
+# Close the cursor
+cursor.close()
+# Close the databse connections
+connection.close()

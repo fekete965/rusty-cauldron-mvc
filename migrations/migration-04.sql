@@ -114,7 +114,7 @@ INSERT INTO users (first_name, last_name, email, password)
 SELECT first_name, last_name, email, password 
 FROM (
   SELECT
-    "Dooby" as first_name, NULL as last_name, "dooby,@owl-postal.co.uk" as email, "pbkdf2:sha256:260000$0hYLuR1dRzATLmOr$e147819676691371964c373eae76d6e08d3659cf2245470cd52c4e125834d9de" as password
+    "Dooby" as first_name, NULL as last_name, "dooby@owl-postal.co.uk" as email, "pbkdf2:sha256:260000$0hYLuR1dRzATLmOr$e147819676691371964c373eae76d6e08d3659cf2245470cd52c4e125834d9de" as password
   ) u
 WHERE NOT EXISTS (SELECT 1 FROM users WHERE users.email = u.email);
 

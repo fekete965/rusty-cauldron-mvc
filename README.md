@@ -31,7 +31,7 @@ albus-dumbledore@owl-postal.co.uk
 argus-filch@owl-postal.co.uk
 bellatrix-lestrange@owl-postal.co.uk
 dolores-umbridge@owl-postal.co.uk
-dooby,@owl-postal.co.uk
+dooby@owl-postal.co.uk
 draco-malfoy@owl-postal.co.uk
 dudley-dursley@owl-postal.co.uk
 fleur-delacour@owl-postal.co.uk

@@ -5,17 +5,43 @@
 {% endblock %}
 
 {% block main %}
-  Recipes
-  <ul>
-  {% for recipe in recipes %}
-    <li>
-      <h1>Title: {{ recipe.title }}</h1>
-      <p>Preparation time: {{ recipe.prep_time }}</p>
-      <p>Cooking Time: {{ recipe.cooking_time }}</p>
-      <p>Description: {{ recipe.description }}</p>
-      <p>Created At: {{ recipe.created_at }}</p>
-      <p>Updated At: {{ recipe.updated_at }}</p>
-    </li>
-  {% endfor %}
-  </ul>
+  <h1>Recipes</h1>
+  <div>
+    <form method="get" action="/recipes">
+      <h2>Filters:</h2>
+      <div>
+        <label for="title">Title:</label>
+        <input type="text" name="title" value="{{ title }}" />
+      </div>
+      <div>
+        <label for="ingredients">Ingredients:</label>
+        <input type="text" name="ingredients" value="{{ ingredients }}" />
+      </div>
+      <div>
+        <label for="per_page">Page size:</label>
+        <select name="per_page">
+          <option value="10" {% if per_page==10 %} selected="selected"{% endif %}>10</option>
+          <option value="15" {% if per_page==15 %} selected="selected"{% endif %}>15</option>
+          <option value="20" {% if per_page==20 %} selected="selected"{% endif %}>20</option>
+        </select>
+      </div>
+      <div>
+        <button type="submit" >Search</button>
+      </div>
+    </form>
+  </div>
+  <section>
+    <ul>
+    {% for recipe in recipes %}
+      <li>
+        <h3>Title: {{ recipe.title }}</h3>
+        <p>Preparation time: {{ recipe.prep_time }}</p>
+        <p>Cooking Time: {{ recipe.cooking_time }}</p>
+        <p>Description: {{ recipe.description }}</p>
+        <p>Created At: {{ recipe.created_at }}</p>
+        <p>Updated At: {{ recipe.updated_at }}</p>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
 {% endblock %}

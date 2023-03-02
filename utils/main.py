@@ -74,3 +74,9 @@ def validateIngredients(ingredient_list: list[dict]):
             return "Invalid measurement type"
         
     return None
+
+
+def xstr(s):
+    if s is None:
+        return ''
+    return str(s)

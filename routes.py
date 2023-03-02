@@ -1,5 +1,6 @@
 from flask import abort, flash, make_response, redirect, render_template, request, session
 from flask_login import login_required, login_user, logout_user
+from recipeService import RecipeService
 
 from utils.main import is_url_safe, validate_password, validateIngredients
 from constants import ROUTES
@@ -129,12 +130,10 @@ def recipes():
 	args = request.args
 	title = args.get("title")
 	ingredients = args.getlist("ingredients")
-	page = args.getlist("page", 1)
-	page_size = args.getlist("pageSize", 10)
+	page = args.get("page", 1)
+	per_page = args.get("perPage", 10)
 
-	# Get the last 10 recipes without filtering
-	# recipes = recipe_service.get_recipes(title, ingredients, page, page_size)
-	recipes = None # <-- Dummy value for now
+	recipes = RecipeService.get_recipes(title, ingredients, page, per_page)
 	return render_template("recipes.html", recipes=recipes)
 
 

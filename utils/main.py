@@ -11,7 +11,7 @@ def is_url_safe(url: str):
 
 
 def get_database_path():
-    """Returns the databse file's path"""
+    """Returns the database file's path"""
     return os.path.join(os.getcwd(), "rusty-cauldron.db")
 
 
@@ -48,13 +48,13 @@ def is_password_applicable(password: str):
 
 
 def validate_password(password: str, confirmation: str):
-    """Check if the passwors meets every rules"""
+    """Check if the passwords meets every rules"""
     if len(password) < MIN_PASSWORD_LENGTH:
         return f"Password has to be at least {MIN_PASSWORD_LENGTH} character long"
     if password != confirmation:
         return "The passwords aren't match"
     if not is_password_applicable(password):
-        return "The password has to contain at least 1 uppercase character, a number and a speacial character"
+        return "The password has to contain at least 1 uppercase character, a number and a special character"
 
     return None
 
@@ -71,6 +71,6 @@ def validateIngredients(ingredient_list: list[dict]):
             return "Name, amount and measurements are required for any ingredients"
         
         if not measurement in COOKING_MEASUREMENT.list():
-            return "Invald measurment type"
+            return "Invalid measurement type"
         
     return None

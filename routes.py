@@ -129,12 +129,14 @@ def logout():
 def recipes():
 	args = request.args
 	title = args.get("title")
-	ingredients = args.getlist("ingredients")
-	page = args.get("page", 1)
-	per_page = args.get("perPage", 10)
+	ingredients = args.get("ingredients", "")
+	page = int(args.get("page", "1"))
+	per_page = int(args.get("per_page", "10"))
+	ingredient_list = list(filter(None, map(lambda i: i.strip(), ingredients.split(","))))
 
-	recipes = RecipeService.get_recipes(title, ingredients, page, per_page)
-	return render_template("recipes.html", recipes=recipes)
+	recipes = RecipeService.get_recipes(title, ingredient_list, page, per_page)
+ 
+	return render_template("recipes.html", recipes=recipes, title=title, ingredients=ingredients, page=page, per_page=per_page)
 
 
 # Define Add Recipe route

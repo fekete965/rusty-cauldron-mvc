@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from app import App
 from utils.main import get_database_path
 
+
 # Get the database's path
 database_path = get_database_path()
 

@@ -11,8 +11,6 @@ class Ingredient(db.Model):
     measurement = db.Column("measurement", db.String(50), nullable=False)
     created_at = db.Column("created_at", db.DateTime, nullable=False)
     updated_at = db.Column("updated_at", db.DateTime, nullable=False)
-    
-    recipe = db.relationship("Recipe", backref=db.backref("recipes", uselist=False))
 
     def __init__(self, recipe_id, name, amount, measurement, created_at, updated_at):
         self.recipe_id = recipe_id

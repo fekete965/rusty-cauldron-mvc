@@ -1,11 +1,21 @@
 from flask import abort, flash, make_response, redirect, render_template, request, session
 from flask_login import login_required, login_user, logout_user
 from recipeService import RecipeService
+from dateutil import parser
 
 from utils.main import is_url_safe, validate_password, validateIngredients
 from constants import ROUTES
 from app import App
 from werkzeug.security import generate_password_hash, check_password_hash
+
+
+@App.template_filter('format_string_date')
+def format_string_date(date, fmt=None):
+    date = parser.parse(date)
+    native = date.replace(tzinfo=None)
+    if not fmt:
+        fmt='%Y-%m-%d'
+    return native.strftime(fmt)
 
 # Define Home route
 @App.route(ROUTES.Home, methods=["GET"])
@@ -128,15 +138,15 @@ def logout():
 @App.route(ROUTES.Recipes, methods=["GET"])
 def recipes():
 	args = request.args
-	title = args.get("title")
+	title = args.get("title", "")
 	ingredients = args.get("ingredients", "")
 	page = int(args.get("page", "1"))
 	per_page = int(args.get("per_page", "10"))
 	ingredient_list = list(filter(None, map(lambda i: i.strip(), ingredients.split(","))))
 
-	recipes = RecipeService.get_recipes(title, ingredient_list, page, per_page)
+	(recipes, ingredientsMap) = RecipeService.get_recipes(title, ingredient_list, page, per_page)
  
-	return render_template("recipes.html", recipes=recipes, title=title, ingredients=ingredients, page=page, per_page=per_page)
+	return render_template("recipes.html", recipes=recipes, ingredientsMap=ingredientsMap, title=title, ingredients=ingredients, page=page, per_page=per_page)
 
 
 # Define Add Recipe route

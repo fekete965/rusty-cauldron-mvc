@@ -26,10 +26,17 @@ class RecipeService():
     # Prepare order by
     order_by = Recipe.created_at.desc()
     # Add order by to query
-    orderedQuery = query.order_by(order_by)
+    query = query.order_by(order_by)
     # Run final query with pagination
-    paginatedQuery = orderedQuery.paginate(page=page, per_page=per_page, error_out=False)
-    return paginatedQuery
+    paginatedRecipes = query.paginate(page=page, per_page=per_page, error_out=False)
+    
+    recipeIdsOnPage = list(map(lambda r: r._id, paginatedRecipes.items))
+    ingredientsPerRecipe = {}
+    for recipeId in recipeIdsOnPage:
+        ingredients = Ingredient.query.filter(Ingredient.recipe_id == recipeId).order_by(Ingredient.name.desc()).all()
+        ingredientsPerRecipe[recipeId] = ingredients
+        
+    return (paginatedRecipes, ingredientsPerRecipe)
 
 # Get optional recipe ids from ingredients
 def getRecipeIdsFromFilteredIngredients(ingredients):

@@ -5,9 +5,9 @@ INSERT INTO recipes (user_id, title, prep_time, cooking_time, description)
 VALUES (3, 'Vegetable Stir Fry', 10, 15, '1. Chop up 2 bell peppers, 2 carrots, and 1 onion into bite-sized pieces. 2. In a pan, heat 1 tbsp of oil over medium heat. 3. Add the chopped vegetables to the pan and stir fry for 10-15 minutes until they are cooked through. 4. Serve the stir fry with rice or noodles.');
 
 INSERT INTO ingredients (recipe_id, name, amount, measurement) 
-VALUES ((SELECT id FROM recipes WHERE title = 'Vegetable Stir Fry' AND user_id = 3), 'Bell Pepper', 2, 'each'),
-       ((SELECT id FROM recipes WHERE title = 'Vegetable Stir Fry' AND user_id = 3), 'Carrot', 2, 'each'),
-       ((SELECT id FROM recipes WHERE title = 'Vegetable Stir Fry' AND user_id = 3), 'Onion', 1, 'each'),
+VALUES ((SELECT id FROM recipes WHERE title = 'Vegetable Stir Fry' AND user_id = 3), 'Bell Pepper', 2, 'medium'),
+       ((SELECT id FROM recipes WHERE title = 'Vegetable Stir Fry' AND user_id = 3), 'Carrot', 2, 'medium'),
+       ((SELECT id FROM recipes WHERE title = 'Vegetable Stir Fry' AND user_id = 3), 'Onion', 1, 'medium'),
        ((SELECT id FROM recipes WHERE title = 'Vegetable Stir Fry' AND user_id = 3), 'Oil', 1, 'tbsp');
 
 INSERT INTO recipes(user_id, title, prep_time, cooking_time, description)

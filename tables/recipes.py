@@ -1,4 +1,4 @@
-from persist import db
+from app import db
 
 
 class Recipe(db.Model):

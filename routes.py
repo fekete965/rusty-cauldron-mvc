@@ -1,6 +1,6 @@
 from flask import abort, flash, make_response, redirect, render_template, request, session
 from flask_login import login_required, login_user, logout_user
-from recipeService import RecipeService
+from recipe_service import RecipeService
 from dateutil import parser
 
 from utils.main import is_url_safe, validate_password, validateIngredients

@@ -27,3 +27,4 @@ App.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(App)
 
 import routes
+import login_manager

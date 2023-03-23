@@ -142,7 +142,7 @@ def recipes():
 	per_page = int(args.get("per_page", "10"))
 	ingredient_list = list(filter(None, map(lambda i: i.strip(), ingredients.split(","))))
 
-	(recipes, ingredientsMap) = RecipeService.get_recipes(title, ingredient_list, page, per_page)
+	(recipes, ingredientsMap) = RecipeService.get_recipes(user_id=None, title_opt=title, ingredients=ingredient_list, page=page, per_page=per_page)
  
 	return render_template("recipes.html", recipes=recipes, ingredientsMap=ingredientsMap, title=title, ingredients=ingredients, page=page, per_page=per_page)
 

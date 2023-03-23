@@ -1,5 +1,5 @@
 from flask import abort, flash, make_response, redirect, render_template, request, session
-from flask_login import login_required, login_user, logout_user
+from flask_login import current_user, login_required, login_user, logout_user
 from recipe_service import RecipeService
 from dateutil import parser
 from user_service import UserService
@@ -244,22 +244,19 @@ def recipe(id):
 @App.route(ROUTES.MyRecipes, methods = ["GET", "POST"])
 @login_required
 def user_recipes():
-	recipes = None
 
 	if request.method == "GET":
 		# Get the user's active recipes from the DB based
-		# recipes = recipe_service.get_my_recipes(user_id)
-		return render_template("my-recipes.html", recipes=recipes)
+		args = request.args
+		title = args.get("title", "")
+		ingredients = args.get("ingredients", "")
+		page = int(args.get("page", "1"))
+		per_page = int(args.get("per_page", "10"))
+		ingredient_list = list(filter(None, map(lambda i: i.strip(), ingredients.split(","))))
 
-	include_deleted = request.form.get("includeDeleted", False)
-	if include_deleted:
-		# recipes = recipe_service.get_my_recipes(user_id, deleted=true)
-		recipes = None # <-- Dummy value for now
-	else:
-		# recipes = recipe_service.get_my_recipes(user_id)
-		recipes = None # <-- Dummy value for now
-  
-	return render_template("my-recipes.html", recipes=recipes)
+		(recipes, ingredientsMap) = RecipeService.get_recipes(user_id=current_user.get_id(), title_opt=title, ingredients=ingredient_list, page=page, per_page=per_page)
+ 
+		return render_template("my-recipes.html", recipes=recipes, ingredientsMap=ingredientsMap, title=title, ingredients=ingredients, page=page, per_page=per_page)
 
 # Define 404 page
 @App.errorhandler(404)

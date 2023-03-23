@@ -7,7 +7,7 @@ from constants import COOKING_MEASUREMENT, MIN_PASSWORD_LENGTH, ROUTES
 
 def is_url_safe(url: str):
     """Validates the url"""
-    return url in ROUTES.list()
+    return not url or url in ROUTES.list()
 
 
 def get_database_path():

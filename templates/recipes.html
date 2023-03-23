@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block title %}
-  Sell
+  Recipes
 {% endblock %}
 
 {% block main %}
@@ -87,7 +87,7 @@
     </form>
   </div>
   {% if not recipes.total or recipes.items|length == 0 %}
-    <div class="text-4xl text-center">Cannot find any recipes :(</div>
+    <div class="text-4xl text-center">Couldn't find any recipes :(</div>
   {% else %}
     <ul class="mt-1 grid grid-cols-1 md:grid-cols-3 gap-5">
       {% for recipe in recipes %}

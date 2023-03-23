@@ -2,6 +2,7 @@ from flask import abort, flash, make_response, redirect, render_template, reques
 from flask_login import login_required, login_user, logout_user
 from recipe_service import RecipeService
 from dateutil import parser
+from user_service import UserService
 
 from utils.main import is_url_safe, validate_password, validateIngredients
 from constants import ROUTES
@@ -71,14 +72,13 @@ def sign_up():
 		return render_template("signup.html", form_data=form_data), 400
 
 	# Check if email is in use
-	# user = db.execute("SELECT * FROM users WHERE email = ? LIMIT 1;", email)
-	user = None # <-- Dummy value for now
-	if len(user) != 0:
+	user = UserService.get_user_by_email(form_data["email"])
+	if user:
 		flash("Email is already in use")
 		return render_template("signup.html"), 400	
 
 	# Call userService to create a user
- 	# user_service.create_user(first_name, last_name, email, generate_password_hash(password))
+	UserService.create_user(form_data['first_name'], form_data['last_name'], form_data['email'], generate_password_hash(form_data['password']))
 	return redirect(ROUTES.Login)
 
 
@@ -103,35 +103,33 @@ def login():
 		flash("Password required")
 		return render_template("login.html", form_data=form_data), 400
  
-	# Call userService to login the user
- 	# user = user_service.login_user(form_data["email"], form_data["password"])
-	user = None # <-- Dummy value for now
-	# Prompt the user 
-	if not user:
-		flash("Incorrect email or password")
+	# Call userService to find the user
+	user = UserService.get_user_by_email(form_data["email"])
+	
+	# If the user doesn't exist or the password isn't a match prompt the user
+	if not user or not check_password_hash(user.password, form_data["password"]):
+		flash("Invalid email or password")
 		form_data.pop("password")
 		return render_template("login.html", form_data=form_data), 400
-
+	
 	# Check if next url exists
 	next = request.args.get("next")
 	if not is_url_safe(next):
 		return abort(400)
 
 	# Get the user and save it
-	login_user("", remember=True)
+	login_user(user, remember=True)
 
 	# Redirect the user
-	resp = make_response(redirect(next or ROUTES.Home))
-	return resp
+	return redirect(next or ROUTES.Home)
 
 
 # Define Logout route
-@App.route(ROUTES.Logout, methods=["POST"])
-@login_required
+@App.route(ROUTES.Logout, methods=["GET", "POST"])
 def logout():
-  # logout the user by removing the session from the cookies and mark it expired in the DB
+	# Logout the user
 	logout_user()
-	return redirect("/")
+	return redirect(ROUTES.Home)
 
 
 # Define Recipes route
@@ -191,7 +189,6 @@ def add_recipe():
 
 # Define Recipe route
 @App.route(ROUTES.Recipe, methods=["DELETE", "GET", "PUT"])
-@login_required
 def recipe(id):
 	# Return the recipe information to the user
 	if (request.method == "GET"):

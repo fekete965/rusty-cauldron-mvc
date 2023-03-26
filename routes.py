@@ -199,8 +199,9 @@ def add_recipe():
 		flash("Description is required")
 		return render_template("add-recipe.html", form_data=form_data), 400
  
+	RecipeService.insert_recipe(current_user.get_id(), form_data)
+	flash("Recipe added")
 
-	# Validate the form, save the record into the DB and redirect the user
 	return redirect(ROUTES.AddRecipe)
 
 

@@ -1,6 +1,7 @@
 from tables.ingredients import Ingredient
 from tables.recipes import Recipe
 from utils.main import xstr
+from app import db
 
 class RecipeService():
 	# Get optional recipe ids from ingredients
@@ -22,7 +23,7 @@ class RecipeService():
 		# Clean optional title
 		title = xstr(title_opt)
 		# Prepare recipe title filter
-		recipeFilter = Recipe.title.like(f"%{title}%")            
+		recipeFilter = Recipe.title.like(f"%{title}%")
 		# Start recipe query
 		query = Recipe.query.filter(recipeFilter)
 		# Filter by user_id if needed
@@ -47,3 +48,22 @@ class RecipeService():
 			ingredientsPerRecipe[recipeId] = ingredients
 
 		return (paginatedRecipes, ingredientsPerRecipe)
+
+
+	def insert_recipe(user_id, form_data):
+		def toIngredient(recipe_id):
+			def fn(ingredient):
+				return Ingredient(recipe_id=recipe_id, name=ingredient["name"], amount=ingredient["amount"], measurement=ingredient["measurement"])
+			return fn
+  
+		newRecipe = Recipe(user_id=user_id, title=form_data["title"], prep_time=form_data["prep_time"], cooking_time=form_data["cooking_time"], description=form_data["description"])
+  
+		db.session.add(newRecipe)
+		db.session.commit()
+  
+		ingredientList = list(map(toIngredient(newRecipe._id), form_data["ingredient_list"]))
+		db.session.add_all(ingredientList)
+		db.session.commit()
+
+		return None
+   

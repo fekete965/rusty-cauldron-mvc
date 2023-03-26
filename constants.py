@@ -5,7 +5,11 @@ MIN_PASSWORD_LENGTH = 8
 
 class ExtendedEnum(StrEnum):
     @classmethod
-    def list(cls):
+    def nameList(cls):
+        return list(map(lambda c: c.name, cls))
+    
+    @classmethod
+    def valueList(cls):
         return list(map(lambda c: c.value, cls))
 
 class ROUTES(ExtendedEnum):

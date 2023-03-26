@@ -64,8 +64,7 @@ def validateIngredients(ingredient_list: list[dict]):
         
         if not name or not amount or not measurement:
             return "Name, amount and measurements are required for any ingredients"
-        
-        if not measurement in COOKING_MEASUREMENT.list():
+        if not measurement in COOKING_MEASUREMENT.nameList():
             return "Invalid measurement type"
         
     return None

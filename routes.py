@@ -1,5 +1,6 @@
 from flask import abort, flash, make_response, redirect, render_template, request, session
 from flask_login import current_user, login_required, login_user, logout_user
+from login_manager import unauthenticated_route
 from recipe_service import RecipeService
 from dateutil import parser
 from user_service import UserService
@@ -26,6 +27,7 @@ def index():
 
 # Define Signup route
 @App.route(ROUTES.Signup, methods=["GET", "POST"])
+@unauthenticated_route
 def sign_up():
 	if (request.method == "GET"):
 		return render_template("signup.html", form_data=None)
@@ -84,6 +86,7 @@ def sign_up():
 
 # Define Login route
 @App.route(ROUTES.Login, methods=["GET", "POST"])
+@unauthenticated_route
 def login():
 	if (request.method == "GET"):
 		return render_template("login.html", form_data=None)

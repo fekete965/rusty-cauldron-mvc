@@ -5,5 +5,203 @@
 {% endblock %}
 
 {% block main %}
-  Add Recipe
+<div class="m-auto block p-6 rounded-lg shadow-lg bg-white max-w-2xl">
+  <h1 class="text-2xl text-center">Add a recipe</h1>
+  <form action="/recipes/new" class="mt-4" method="POST">
+    <div class="form-group mb-6">
+      <input type="input" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ form_data['title'] }}" name="title" placeholder="Title" />
+    </div>
+    <div class="form-group mb-6">
+      <input type="number" min="0" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ form_data['prep_time'] }}" name="prep_time" placeholder="Preparation time (minute)" />
+    </div>
+    <div class="form-group mb-6">
+      <input type="number" min="0" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ form_data['cooking_time'] }}" name="cooking_time" placeholder="Cooking time (minute)" />
+    </div>
+    <div>
+    <div class="form-group mb-6">
+      <div class="mt-4">
+        <button class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 w-full" type="button" onclick="handleOnAddBtnClick()">Add ingredient</button>
+      </div>
+      <div id="measurements">
+        {% for ingredient in form_data["ingredient_dataset"] %}
+          <div class="grid gap-2 grid-cols-[auto_5rem_3rem] mt-4">
+            <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ ingredient['value'] }}" name="ingredient" placeholder="Ingredient" />
+            <select class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" name="measurement" selected="{{ ingredient['measurement'] }}">
+              <option value="cl">cl</option>
+              <option value="cup">cup</option>
+              <option value="dkg">dkg</option>
+              <option value="dl">dl</option>
+              <option value="fl">fl</option>
+              <option value="g">g</option>
+              <option value="gal">gal</option>
+              <option value="kg">kg</option>
+              <option value="l">l</option>
+              <option value="large">large</option>
+              <option value="lb">lb</option>
+              <option value="medium">medium</option>
+              <option value="mg">mg</option>
+              <option value="ml">ml</option>
+              <option value="oz">oz</option>
+              <option value="package">package</option>
+              <option value="pt">pt</option>
+              <option value="qt">qt</option>
+              <option value="small">small</option>
+              <option value="t">t</option>
+              <option value="tbs">tbs</option>
+              <option value="tsp">tsp</option>
+            </select>
+            <button class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 w-full" type="button" onclick="handleOnRemoveBtnClick(event)">X</button>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="form-group mb-6">
+      <textarea class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" rows="10" value="{{ form_data['description'] }}" name="description" placeholder="Description of the recipe"></textarea>
+    </div>
+    <button class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 w-full" type="submit">Add Recipe</button>
+  </form>
+</div>
+
+<script>
+  const measurementsContainer = document.querySelector("#measurements")
+
+  const measurementList = [
+    "cl",
+    "cup",
+    "dkg",
+    "dl",
+    "fl",
+    "g",
+    "gal",
+    "kg",
+    "l",
+    "large",
+    "lb",
+    "medium",
+    "mg",
+    "ml",
+    "oz",
+    "package",
+    "pt",
+    "qt",
+    "small",
+    "t",
+    "tbs",
+    "tsp",
+  ]
+
+  const inputContainerClassList = [
+    "grid",
+    "gap-2",
+    "grid-cols-[auto_5rem_3rem]",
+    "mt-4",
+  ]
+
+  const inputClassList = [
+    "bg-gray-50",
+    "border",
+    "border-gray-300",
+    "text-gray-900",
+    "text-sm",
+    "rounded-lg",
+    "focus:ring-blue-500",
+    "focus:border-blue-500",
+    "block",
+    "w-full",
+    "p-2.5",
+    "dark:bg-gray-700",
+    "dark:border-gray-600",
+    "dark:placeholder-gray-400",
+    "dark:text-white",
+    "dark:focus:ring-blue-500",
+    "dark:focus:border-blue-500",
+  ]
+
+  const btnClassList = [
+    "text-white",
+    "bg-gray-800",
+    "hover:bg-gray-900",
+    "focus:outline-none",
+    "focus:ring-4",
+    "focus:ring-gray-300",
+    "font-medium",
+    "rounded-lg",
+    "text-sm",
+    "px-5",
+    "py-2.5",
+    "dark:bg-gray-800",
+    "dark:hover:bg-gray-700",
+    "dark:focus:ring-gray-700",
+    "dark:border-gray-700",
+    "w-full",
+  ]
+
+  function createEl(tag) {
+    return document.createElement(tag)
+  }
+
+  function createIngredientInput() {
+    const input = createEl("input")
+    input.type = "text"
+    inputClassList.forEach(function(className) {
+      input.classList.add(className)
+    })
+    input.name = "ingredient"
+    input.placeholder = "Ingredient"
+
+    return input
+  }
+
+  function createMeasurementInput() {
+    const select = createEl("select")
+    select.name = "measurement"
+    inputClassList.forEach(function(className) {
+      select.classList.add(className)
+    })
+    
+    measurementList.forEach(function(measurement) {
+      const option = createEl("option")
+      option.innerText = measurement
+      option.value = measurement
+
+      select.appendChild(option)
+    })
+
+    return select
+  }
+
+  function addInputGroup() {
+    const container = createEl("div")
+    inputContainerClassList.forEach(function(className) {
+      container.classList.add(className)
+    })
+
+    const measurement = createMeasurementInput()
+    const ingredientList = createIngredientInput()
+
+    const removeBtn = createEl("button")
+    btnClassList.forEach(function(className) {
+      removeBtn.classList.add(className)
+    })
+    removeBtn.innerText = "X"
+    removeBtn.type = "button"
+    removeBtn.addEventListener("click", function() {
+      container.remove()
+    })
+    
+    container.appendChild(ingredientList)
+    container.appendChild(measurement)
+    container.appendChild(removeBtn)
+
+    measurementsContainer.appendChild(container)
+  }
+
+  function handleOnRemoveBtnClick(event) {
+    event.target.parentElement.remove()
+  }
+
+  function handleOnAddBtnClick() {
+    addInputGroup()
+  }
+</script>
 {% endblock %}

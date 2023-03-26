@@ -1,12 +1,12 @@
-from flask import abort, flash, make_response, redirect, render_template, request, session
+from flask import flash, redirect, render_template, request
 from flask_login import current_user, login_required, login_user, logout_user
 from login_manager import unauthenticated_route
 from recipe_service import RecipeService
 from dateutil import parser
 from user_service import UserService
 
-from constants import ROUTES
 from utils.main import validate_password, validateIngredients
+from constants import COOKING_MEASUREMENT, ROUTES
 from app import App
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -149,38 +149,60 @@ def recipes():
 @App.route(ROUTES.AddRecipe, methods=["GET", "POST"])
 @login_required
 def add_recipe():
+
+	defaultFormData = {
+		"ingredient_dataset": [{ "value": "", "measurement": COOKING_MEASUREMENT.cl }],
+	}
+
 	if (request.method == "GET"):
-		return render_template("add-recipe.html")
-	# Check title
-	title = request.form.get("title")
-	if not title:
-		flash("Title is required")
-		return render_template("add-recipe.html"), 400
-	# Check preparation time
-	prep_time = request.form.get("prepTime")
-	if (prep_time and not prep_time.isdigit()):
-		flash("Preparation time must be a number")
-		return render_template("add-recipe.html"), 400
-	# Check cooking time
-	cooking_time = request.form.get("cookingTime")
-	if not cooking_time:
-		flash("Cooking time is required")
-		return render_template("add-recipe.html"), 400
-	if not cooking_time.isdigit():
-		flash("Cooking time must be a number")
-		return render_template("add-recipe.html"), 400
-	# Check description
-	description = request.form.get("description")
-	if not description:
-		flash("Description is required")
-		return render_template("add-recipe.html"), 400
-	# Check ingredients
-	ingredients = request.form.getlist("ingredients")
-	ingredients_error_msg = validateIngredients(ingredients)
-	if ingredients_error_msg:
-		flash(ingredients_error_msg)
-		return render_template("add-recipe.html"), 400
+		return render_template("add-recipe.html", form_data=defaultFormData)
+
+	def makeIngredientData(dataTuple):
+		return { "value": dataTuple[0], "measurement": dataTuple[1] }
+
+	ingredient_list = request.form.getlist("ingredient")
+	measurement_list = request.form.getlist("measurement")
+	ingredient_dataset = list(map(makeIngredientData, zip(ingredient_list, measurement_list)))
+
+	form_data = {
+		"title": request.form.get("title", ""),
+		"prep_time": request.form.get("prep_time"),
+		"cooking_time": request.form.get("cooking_time"),
+  		"ingredient_dataset" : ingredient_dataset,
+		"description": request.form.get("description"),
+	}
  
+	# Check title
+	if not form_data["title"]:
+		flash("Title is required")
+		return render_template("add-recipe.html", form_data=form_data), 400
+	# Check preparation time
+	if (form_data["prep_time"] and not form_data["prep_time"].isdigit()):
+		flash("Preparation time must be a number")
+		return render_template("add-recipe.html", form_data=form_data), 400
+	# Check cooking time
+	if not form_data["cooking_time"]:
+		flash("Cooking time is required")
+		return render_template("add-recipe.html", form_data=form_data), 400
+	if not form_data["cooking_time"].isdigit():
+		flash("Cooking time must be a number")
+		return render_template("add-recipe.html", form_data=form_data), 400
+	# Check description
+	if not form_data["description"]:
+		flash("Description is required")
+		return render_template("add-recipe.html", form_data=form_data), 400
+	# Check ingredients
+	# ingredients_error_msg = validateIngredients(form_data["ingredient_list"])
+	# if ingredients_error_msg:
+	# 	flash(ingredients_error_msg)
+	# 	return render_template("add-recipe.html", form_data=form_data), 400
+ 
+ 	# Check ingredients
+	# measurements_error_msg = validateMeasurement(form_data["measurement_list"])
+	# if measurements_error_msg:
+	# 	flash(measurements_error_msg)
+	# 	return render_template("add-recipe.html", form_data=form_data), 400
+
 	# Validate the form, save the record into the DB and redirect the user
 	return redirect(ROUTES.AddRecipe)
 

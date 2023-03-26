@@ -15,7 +15,7 @@ class User(db.Model, UserMixin):
     created_at = db.Column("created_at", db.DateTime, nullable=False, default=get_timestamp())
     updated_at = db.Column("updated_at", db.DateTime, nullable=False, default=get_timestamp())
 
-    def __init__(self, first_name, last_name, email, password, deleted, created_at, updated_at):
+    def __init__(self, first_name, last_name, email, password, deleted=False, created_at=get_timestamp(), updated_at=get_timestamp()):
         self.first_name = first_name
         self.last_name = last_name
         self.email = email

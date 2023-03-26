@@ -19,6 +19,7 @@ def format_string_date(date, fmt=None):
         fmt='%Y-%m-%d'
     return native.strftime(fmt)
 
+
 # Define Home route
 @App.route(ROUTES.Home, methods=["GET"])
 def index():
@@ -151,24 +152,25 @@ def recipes():
 def add_recipe():
 
 	defaultFormData = {
-		"ingredient_dataset": [{ "value": "", "measurement": COOKING_MEASUREMENT.cl }],
+		"ingredient_list": [{ "name": "", "amount": "1", "measurement": COOKING_MEASUREMENT.cl }],
 	}
 
 	if (request.method == "GET"):
 		return render_template("add-recipe.html", form_data=defaultFormData)
 
 	def makeIngredientData(dataTuple):
-		return { "value": dataTuple[0], "measurement": dataTuple[1] }
+		return { "name": dataTuple[0], "amount": dataTuple[1] ,"measurement": dataTuple[2] }
 
-	ingredient_list = request.form.getlist("ingredient")
+	ingredient_name_list = request.form.getlist("ingredient")
+	amount_list = request.form.getlist("amount")
 	measurement_list = request.form.getlist("measurement")
-	ingredient_dataset = list(map(makeIngredientData, zip(ingredient_list, measurement_list)))
+	ingredient_list = list(map(makeIngredientData, zip(ingredient_name_list, amount_list, measurement_list)))
 
 	form_data = {
 		"title": request.form.get("title", ""),
 		"prep_time": request.form.get("prep_time"),
 		"cooking_time": request.form.get("cooking_time"),
-  		"ingredient_dataset" : ingredient_dataset,
+		"ingredient_list" : ingredient_list,
 		"description": request.form.get("description"),
 	}
  
@@ -187,21 +189,16 @@ def add_recipe():
 	if not form_data["cooking_time"].isdigit():
 		flash("Cooking time must be a number")
 		return render_template("add-recipe.html", form_data=form_data), 400
+	# Check ingredients
+	ingredients_error_msg = validateIngredients(form_data["ingredient_list"])
+	if ingredients_error_msg:
+		flash(ingredients_error_msg)
+		return render_template("add-recipe.html", form_data=form_data), 400
 	# Check description
 	if not form_data["description"]:
 		flash("Description is required")
 		return render_template("add-recipe.html", form_data=form_data), 400
-	# Check ingredients
-	# ingredients_error_msg = validateIngredients(form_data["ingredient_list"])
-	# if ingredients_error_msg:
-	# 	flash(ingredients_error_msg)
-	# 	return render_template("add-recipe.html", form_data=form_data), 400
  
- 	# Check ingredients
-	# measurements_error_msg = validateMeasurement(form_data["measurement_list"])
-	# if measurements_error_msg:
-	# 	flash(measurements_error_msg)
-	# 	return render_template("add-recipe.html", form_data=form_data), 400
 
 	# Validate the form, save the record into the DB and redirect the user
 	return redirect(ROUTES.AddRecipe)
@@ -277,6 +274,7 @@ def user_recipes():
 		(recipes, ingredientsMap) = RecipeService.get_recipes(user_id=current_user.get_id(), title_opt=title, ingredients=ingredient_list, page=page, per_page=per_page)
  
 		return render_template("my-recipes.html", recipes=recipes, ingredientsMap=ingredientsMap, title=title, ingredients=ingredients, page=page, per_page=per_page)
+
 
 # Define 404 page
 @App.errorhandler(404)

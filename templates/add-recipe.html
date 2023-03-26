@@ -23,9 +23,10 @@
         <button class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 w-full" type="button" onclick="handleOnAddBtnClick()">Add ingredient</button>
       </div>
       <div id="measurements">
-        {% for ingredient in form_data["ingredient_dataset"] %}
-          <div class="grid gap-2 grid-cols-[auto_5rem_3rem] mt-4">
-            <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ ingredient['value'] }}" name="ingredient" placeholder="Ingredient" />
+        {% for ingredient in form_data["ingredient_list"] %}
+          <div class="grid gap-2 grid-cols-[auto_7rem_5rem_3rem] mt-4">
+            <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ ingredient['name'] }}" name="ingredient" placeholder="Ingredient" />
+            <input type="number" min="0.1" step="0.1" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ ingredient['amount'] }}" name="amount" placeholder="Amount" />
             <select class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" name="measurement" selected="{{ ingredient['measurement'] }}">
               <option value="cl">cl</option>
               <option value="cup">cup</option>
@@ -56,7 +57,7 @@
       </div>
     </div>
     <div class="form-group mb-6">
-      <textarea class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" rows="10" value="{{ form_data['description'] }}" name="description" placeholder="Description of the recipe"></textarea>
+      <textarea class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" rows="10" name="description" placeholder="Description of the recipe">{{ form_data['description'] }}</textarea>
     </div>
     <button class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 w-full" type="submit">Add Recipe</button>
   </form>
@@ -93,7 +94,7 @@
   const inputContainerClassList = [
     "grid",
     "gap-2",
-    "grid-cols-[auto_5rem_3rem]",
+    "grid-cols-[auto_7rem_5rem_3rem]",
     "mt-4",
   ]
 
@@ -152,6 +153,21 @@
     return input
   }
 
+  function createAmountInput() {
+    const input = createEl("input")
+    input.type = "number"
+    input.min = 0.1
+    input.step = 0.1
+    input.value = 1
+    inputClassList.forEach(function(className) {
+      input.classList.add(className)
+    })
+    input.name = "amount"
+    input.placeholder = "Amount"
+
+    return input
+  }
+
   function createMeasurementInput() {
     const select = createEl("select")
     select.name = "measurement"
@@ -176,8 +192,9 @@
       container.classList.add(className)
     })
 
+    const ingredient = createIngredientInput()
+    const amount = createAmountInput()
     const measurement = createMeasurementInput()
-    const ingredientList = createIngredientInput()
 
     const removeBtn = createEl("button")
     btnClassList.forEach(function(className) {
@@ -189,7 +206,8 @@
       container.remove()
     })
     
-    container.appendChild(ingredientList)
+    container.appendChild(ingredient)
+    container.appendChild(amount)
     container.appendChild(measurement)
     container.appendChild(removeBtn)
 

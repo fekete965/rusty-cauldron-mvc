@@ -2,12 +2,7 @@ from datetime import datetime
 import os
 from string import punctuation
 
-from constants import COOKING_MEASUREMENT, MIN_PASSWORD_LENGTH, ROUTES
-
-
-def is_url_safe(url: str):
-    """Validates the url"""
-    return not url or url in ROUTES.list()
+from constants import COOKING_MEASUREMENT, MIN_PASSWORD_LENGTH
 
 
 def get_database_path():

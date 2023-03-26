@@ -5,8 +5,8 @@ from recipe_service import RecipeService
 from dateutil import parser
 from user_service import UserService
 
-from utils.main import is_url_safe, validate_password, validateIngredients
 from constants import ROUTES
+from utils.main import validate_password, validateIngredients
 from app import App
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -114,11 +114,6 @@ def login():
 		flash("Invalid email or password")
 		form_data.pop("password")
 		return render_template("login.html", form_data=form_data), 400
-	
-	# Check if next url exists
-	next = request.args.get("next")
-	if not is_url_safe(next):
-		return abort(400)
 
 	# Get the user and save it
 	login_user(user, remember=True)

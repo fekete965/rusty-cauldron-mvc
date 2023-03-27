@@ -94,4 +94,9 @@ class RecipeService():
 		db.session.commit()
 
 		return True
-   
+      
+	def find_recipe_by_id(recipe_id):
+		recipe = Recipe.query.filter(Recipe._id == recipe_id).first()
+		ingredients = Ingredient.query.filter(Ingredient.recipe_id == recipe._id).all()
+
+		return (recipe, ingredients)

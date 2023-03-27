@@ -1,3 +1,4 @@
+from sqlalchemy import func
 from tables.ingredients import Ingredient
 from tables.recipes import Recipe
 from utils.main import xstr
@@ -66,4 +67,12 @@ class RecipeService():
 		db.session.commit()
 
 		return None
+
+	def mark_recipe_as_deleted(user_id, recipe_id):
+		db.session.query(Recipe).\
+			filter(Recipe.user_id == user_id, Recipe._id == recipe_id).\
+			update({ "deleted": True, "updated_at": func.now() })
+		db.session.commit()
+
+		return True
    

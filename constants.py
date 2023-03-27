@@ -20,6 +20,8 @@ class ROUTES(ExtendedEnum):
     Recipes= "/recipes"
     AddRecipe = "/recipes/new"
     Recipe = "/recipes/<recipe_id>"
+    UpdateRecipe = "/recipes/<recipe_id>/update"
+    DeleteRecipe = "/recipes/<recipe_id>/delete"
     MyRecipes = "/my-recipes"
 
 class COOKING_MEASUREMENT(ExtendedEnum):

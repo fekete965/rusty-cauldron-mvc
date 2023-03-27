@@ -74,3 +74,8 @@ def xstr(s):
     if s is None:
         return ''
     return str(s)
+
+
+
+def makeIngredientData(dataTuple):
+    return { "name": dataTuple[0], "amount": dataTuple[1] ,"measurement": dataTuple[2] }

@@ -5,7 +5,7 @@ from recipe_service import RecipeService
 from dateutil import parser
 from user_service import UserService
 
-from utils.main import validate_password, validateIngredients
+from utils.main import makeIngredientData, validate_password, validateIngredients
 from constants import COOKING_MEASUREMENT, ROUTES
 from app import App
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -157,9 +157,6 @@ def add_recipe():
 
 	if (request.method == "GET"):
 		return render_template("add-recipe.html", form_data=defaultFormData)
-
-	def makeIngredientData(dataTuple):
-		return { "name": dataTuple[0], "amount": dataTuple[1] ,"measurement": dataTuple[2] }
 
 	ingredient_name_list = request.form.getlist("ingredient")
 	amount_list = request.form.getlist("amount")

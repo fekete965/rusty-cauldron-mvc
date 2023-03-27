@@ -19,7 +19,7 @@ class ROUTES(ExtendedEnum):
     Logout = "/logout"
     Recipes= "/recipes"
     AddRecipe = "/recipes/new"
-    Recipe = "/recipes/<id>"
+    Recipe = "/recipes/<recipe_id>"
     MyRecipes = "/my-recipes"
 
 class COOKING_MEASUREMENT(ExtendedEnum):

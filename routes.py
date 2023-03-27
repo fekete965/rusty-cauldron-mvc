@@ -207,59 +207,63 @@ def add_recipe():
 
 # Define Recipe route
 @App.route(ROUTES.Recipe, methods=["DELETE", "GET", "PUT"])
-def recipe(id):
+def recipe(recipe_id):
+	user_id = current_user.get_id()
+
+	form_data = {}
+
 	# Return the recipe information to the user
-	if (request.method == "GET"):
+	if (request.method == "GET" or not current_user.is_authenticated):
 		# Get the recipe from the DB based on its id and return it to the user
 		# recipe = recipe_service.get_recipe(id)
-		recipe = None # <-- Dummy value for now
-		return render_template("update-recipe.html", recipe=recipe)
+		return render_template("update-recipe.html", form_data=form_data)
 	
 	# Mark recipe as deleted
 	if (request.method == "DELETE"):
 		# Find the recipe, and mark as deleted in the database
-		return render_template("update-recipe.html")
+		RecipeService.mark_recipe_as_deleted(user_id, recipe_id)
+		return render_template("update-recipe.html", form_data=form_data)
 	
   	# Check title
 	title = request.form.get("title")
 	if not title:
 		flash("Title is required")
-		return render_template("update-recipe.html"), 400
+		return render_template("update-recipe.html", form_data=form_data), 400
 
 	# Check preparation time
 	prep_time = request.form.get("prepTime")
 	if (prep_time and not prep_time.isdigit()):
 		flash("Preparation time must be a number")
-		return render_template("update-recipe.html"), 400
+		return render_template("update-recipe.html", form_data=form_data), 400
 
 	# Check cooking time
 	cooking_time = request.form.get("cookingTime")
 	if not cooking_time:
 		flash("Cooking time is required")
-		return render_template("update-recipe.html"), 400
+		return render_template("update-recipe.html", form_data=form_data), 400
 	if not cooking_time.isdigit():
 		flash("Cooking time must be a number")
-		return render_template("update-recipe.html"), 400
+		return render_template("update-recipe.html", form_data=form_data), 400
 
 	# Check description
 	description = request.form.get("description")
 	if not description:
 		flash("Description is required")
-		return render_template("update-recipe.html"), 400
+		return render_template("update-recipe.html", form_data=form_data), 400
 
 	# Check ingredients
 	ingredients = request.form.getlist("ingredients")
 	ingredients_error_msg = validateIngredients(ingredients)
 	if ingredients_error_msg:
 		flash(ingredients_error_msg)
-		return render_template("update-recipe.html"), 400
+		return render_template("update-recipe.html", form_data=form_data), 400
 	
 	# Validate the form, save the record into the DB and redirect the user
 	return redirect(ROUTES.Recipe.replace("<id>", id))
 
 
 # Define My Recipes route
-@App.route(ROUTES.MyRecipes, methods = ["GET", "POST"])
+@App.route(ROUTES.MyRecipes, methods = ["GET"])
 @login_required
 def user_recipes():
 

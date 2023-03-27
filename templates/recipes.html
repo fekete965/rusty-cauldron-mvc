@@ -1,3 +1,5 @@
+{% import 'macros.html' as macros %}
+
 {% extends "layout.html" %}
 
 {% block title %}
@@ -8,17 +10,15 @@
 <section class="px-4">
   <h1 class='text-3xl text-center'>Recipes</h1>
   <div>
-    <form class="grid grid-rows-2 grid-cols-1 sm:grid-cols-[minmax(0,_1fr)_minmax(0,_1fr)_auto_minmax(0,_1fr)] gap-4" method="get" action="/recipes">
+    <form id="recipes_form" class="grid grid-rows-2 grid-cols-1 sm:grid-cols-[minmax(0,_1fr)_minmax(0,_1fr)_auto_minmax(0,_1fr)] gap-4" method="get" action="/recipes">
       <div class="flex flex-col justify-end">
-        <label class="block text-sm font-medium text-gray-900" for="title">Title:</label>
-        <input class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" type="text" name="title" value="{{ title }}" />
+        {{ macros.inputWithLabel(name="title", value=title, label="Title:") }}
       </div>
       <div class="flex flex-col justify-end">
-        <label class="block text-sm font-medium text-gray-900" for="ingredients">Ingredients:</label>
-        <input class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" type="text" name="ingredients" value="{{ ingredients }}" />
+        {{ macros.inputWithLabel(name="ingredients", value=ingredients, label="Ingredients:") }}
       </div>
       <div class="flex flex-col justify-end">
-        <label class="block text-sm font-medium text-gray-900" for="per_page">Page size:</label>
+        {{ macros.label(for="per_page", label="Page size:") }}
         <select class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 sm:max-w-[5rem]" name="per_page">
           <option value="10" {% if per_page==10 %} selected="selected"{% endif %}>10</option>
           <option value="15" {% if per_page==15 %} selected="selected"{% endif %}>15</option>
@@ -26,64 +26,21 @@
         </select>
       </div>
       <div class="flex flex-col justify-end align-start">
-        <button class="leading-[1.125rem] text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-6 py-3 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700" type="submit">Search</button>
+        {{ macros.button(text="Search") }}
       </div>
-      {% if recipes.pages > 1 %}
-        <nav class="flex flex-col col-span-4" aria-label="recipe navigation">
-          <div class="text-xl text-center">{{ recipes.first }} - {{ recipes.last }} of {{ recipes.total }}</div>
-          <ul class="mx-auto inline-flex items-center -space-x-px">
-            <li>
-              <button 
-                {% if recipes.has_prev %}
-                  type="submit"
-                {% else %}
-                  disabled
-                  type="button"
-                {% endif %}
-                name="page"
-                class="block px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                value={{ recipes.prev_num }}
-              >
-                <span class="sr-only">Previous</span>
-                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
-              </button>
-            </li>
-            {% for page in recipes.iter_pages() %}
-              {% if page %}
-                {% if page != recipes.page %}
-                <li>
-                  <button name="page" type="submit" aria-current="page" class="z-10 px-3 py-2 leading-tight text-blue-600 border border-blue-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white" value={{ page }}>{{ page }}</button>
-                </li>
-                {% else %}
-                  <li>
-                    <button name="page" disabled type="button" class="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" value="{{ page }}">{{ page }}</button>
-                  </li>
-                {% endif %}
-              {% else %}
-              <li>
-                <button name="page" disabled type="button" aria-current="page" class="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">...</button>
-              </li>
-              {% endif %}
-            {% endfor %}
-            <li>
-              <button 
-                {% if recipes.has_next %}
-                  type="submit"
-                {% else %}
-                  disabled
-                  type="button"
-                {% endif %}
-                name="page"
-                class="block px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                value="{{ recipes.next_num }}"
-              >
-                <span class="sr-only">Next</span>
-                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
-              </button>
-            </li>
-          </ul>
-        </nav>
-      {% endif %}
+      {{ macros.pagination(
+        show_pagination=recipes.pages > 1,
+        aria_label="recipe navigation",
+        first=recipes.first,
+        last=recipes.last,
+        total=recipes.total,
+        has_prev=recipes.has_prev,
+        prev_num=recipes.prev_num,
+        iter_pages=recipes.iter_pages,
+        current_page=recipes.page,
+        has_next=recipes.has_next,
+        next_num=recipes.next_num,
+      ) }}
     </form>
   </div>
   {% if not recipes.total or recipes.items|length == 0 %}
@@ -91,92 +48,52 @@
   {% else %}
     <ul class="mt-1 grid grid-cols-1 md:grid-cols-3 gap-5">
       {% for recipe in recipes %}
-        <li class="flex flex-col gap-4 p-4 rounded shadow-lg">
-          <div>
-            <h3 class="font-bold text-3xl mb-2 text-center">{{ recipe.title }}</h3>
-          </div>
-          <div>
-            <span class="block text-sm">Preparation time: {{ recipe.prep_time }} minute(s)</span>
-            <span class="block text-sm">Cooking Time: {{ recipe.cooking_time }} minute(s)</span>
-          </div>
-          <div>
-            <h3 class="text-xl">Ingredients:</h3>
-            <ul class="mt-1">
-              {% for ingredient in ingredientsMap[recipe._id] %}
-              <li class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">{{ ingredient.amount }} {{ ingredient.measurement }} {{ ingredient.name }}</li>
-              {% endfor %}
-            </ul>
-          </div>
-          <div>
-            <div class="text-xl">Description:</div>
-            <p class="mt-1 text-gray-700 text-base">
-              {{ recipe.description }}
-            </p>
-          </div>
-          <div class="mt-auto text-xs text-gray-900">
-            <span class="block">Created At: {{ recipe.created_at|format_string_date }}</span>
-            <span class="block">Updated At: {{ recipe.updated_at|format_string_date }}</span>
-          </div>
-        </li>
+        <a class="cursor-pointer" href="/recipes/{{ recipe._id }}">
+          <li class="flex flex-col gap-4 p-4 rounded shadow-lg">
+            <div>
+              <h3 class="font-bold text-3xl mb-2 text-center">{{ recipe.title }}</h3>
+            </div>
+            <div>
+              <span class="block text-sm">Preparation time: {{ recipe.prep_time }} minute(s)</span>
+              <span class="block text-sm">Cooking Time: {{ recipe.cooking_time }} minute(s)</span>
+            </div>
+            <div>
+              <h3 class="text-xl">Ingredients:</h3>
+              <ul class="mt-1">
+                {% for ingredient in ingredientsMap[recipe._id] %}
+                <li class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">{{ ingredient.amount }} {{ ingredient.measurement }} {{ ingredient.name }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+            <div>
+              <div class="text-xl">Description:</div>
+              <p class="mt-1 text-gray-700 text-base">
+                {{ recipe.description }}
+              </p>
+            </div>
+            <div class="mt-auto text-xs text-gray-900">
+              <span class="block">Created At: {{ recipe.created_at|format_string_date }}</span>
+              <span class="block">Updated At: {{ recipe.updated_at|format_string_date }}</span>
+            </div>
+          </li>
+        </a>
       {% endfor %}
     </ul>
   {% endif %}
 
-  {% if recipes.pages > 1 %}
-    <nav class="mt-4 flex flex-col col-span-4" aria-label="recipe navigation">
-      <div class="text-xl text-center">{{ recipes.first }} - {{ recipes.last }} of {{ recipes.total }}</div>
-      <ul class="mx-auto inline-flex items-center -space-x-px">
-        <li>
-          <button 
-            {% if recipes.has_prev %}
-              type="submit"
-            {% else %}
-              disabled
-              type="button"
-            {% endif %}
-            name="page"
-            class="block px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            value={{ recipes.prev_num }}
-          >
-            <span class="sr-only">Previous</span>
-            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
-          </button>
-        </li>
-        {% for page in recipes.iter_pages() %}
-          {% if page %}
-            {% if page != recipes.page %}
-            <li>
-              <button name="page" type="submit" aria-current="page" class="z-10 px-3 py-2 leading-tight text-blue-600 border border-blue-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white" value={{ page }}>{{ page }}</button>
-            </li>
-            {% else %}
-              <li>
-                <button name="page" disabled type="button" class="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" value="{{ page }}">{{ page }}</button>
-              </li>
-            {% endif %}
-          {% else %}
-          <li>
-            <button name="page" disabled type="button" aria-current="page" class="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">...</button>
-          </li>
-          {% endif %}
-        {% endfor %}
-        <li>
-          <button 
-            {% if recipes.has_next %}
-              type="submit"
-            {% else %}
-              disabled
-              type="button"
-            {% endif %}
-            name="page"
-            class="block px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            value="{{ recipes.next_nume }}"
-          >
-            <span class="sr-only">Next</span>
-            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
-          </button>
-        </li>
-      </ul>
-    </nav>
-  {% endif %}
+  {{ macros.pagination(
+    show_pagination=recipes.pages > 1,
+    aria_label="recipe navigation",
+    first=recipes.first,
+    last=recipes.last,
+    total=recipes.total,
+    has_prev=recipes.has_prev,
+    prev_num=recipes.prev_num,
+    iter_pages=recipes.iter_pages,
+    current_page=recipes.page,
+    has_next=recipes.has_next,
+    next_num=recipes.next_num,
+    form_id="recipes_form",
+  ) }}
 </section>
 {% endblock %}

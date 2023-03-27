@@ -1,3 +1,5 @@
+{% import 'macros.html' as macros %}
+
 {% extends "layout.html" %}
 
 {% block title %}
@@ -9,12 +11,14 @@
   <h1 class="text-2xl text-center">Login</h1>
   <form action="/login" class="mt-4" method="POST">
     <div class="form-group mb-6">
-      <input type="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"  value="{{ form_data['email'] }}" name="email" placeholder="Email address" />
+      {{ macros.input(name="email", value=form_data['email'], placeholder="Email address") }}
     </div>
     <div class="form-group mb-6">
-      <input type="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ form_data['password'] }}" name="password" placeholder="Password" />
+      {{ macros.input(name="password", value=form_data['password'], type="password", placeholder="Password") }}
     </div>
-    <button class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 w-full" type="submit">Login</button>
+    <div class="grid grid-cols-1">
+      {{ macros.button(text="Login") }}
+    </div>
   </form>
 </div>
 {% endblock %}

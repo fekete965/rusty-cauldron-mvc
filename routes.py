@@ -201,62 +201,80 @@ def add_recipe():
 
 	return redirect(ROUTES.AddRecipe)
 
-
-# Define Recipe route
-@App.route(ROUTES.Recipe, methods=["DELETE", "GET", "PUT"])
-def recipe(recipe_id):
+# Define Delete recipe route
+@App.route(ROUTES.DeleteRecipe, methods=["POST"])
+def delete_recipe(recipe_id):
 	user_id = current_user.get_id()
 
-	form_data = {}
+	if (not current_user or user_id != request.form.get("owner_user_id")):
+		flash("You are not allowed to perform this action")	
+		return redirect(ROUTES.Recipe.replace("<recipe_id>", recipe_id))
 
-	# Return the recipe information to the user
-	if (request.method == "GET" or not current_user.is_authenticated):
-		# Get the recipe from the DB based on its id and return it to the user
-		# recipe = recipe_service.get_recipe(id)
-		return render_template("update-recipe.html", form_data=form_data)
+	RecipeService.mark_recipe_as_deleted(user_id, recipe_id)
+	flash("Recipe deleted")
+
+	return redirect(ROUTES.Recipes)
+
+# Define Update recipe route
+@App.route(ROUTES.UpdateRecipe, methods=["POST"])
+def update_recipe(recipe_id):
+	user_id = current_user.get_id()
+ 
+	if (not current_user or user_id != request.form.get("owner_user_id")):
+		flash("You are not allowed to perform this action")
+		return redirect(ROUTES.Recipe.replace("<recipe_id>", recipe_id))
+ 
+	ingredient_name_list = request.form.getlist("ingredient")
+	amount_list = request.form.getlist("amount")
+	measurement_list = request.form.getlist("measurement")
 	
-	# Mark recipe as deleted
-	if (request.method == "DELETE"):
-		# Find the recipe, and mark as deleted in the database
-		RecipeService.mark_recipe_as_deleted(user_id, recipe_id)
-		return render_template("update-recipe.html", form_data=form_data)
-	
-  	# Check title
-	title = request.form.get("title")
+	ingredient_list = list(map(makeIngredientData, zip(ingredient_name_list, amount_list, measurement_list)))
+	recipe_user_id = request.form.getlist("ingredient")
+	title = request.form.get("title", "")
+	prep_time = request.form.get("prep_time")
+	cooking_time = request.form.get("cooking_time")
+	description = request.form.get("description")
+ 
+	# Check title
 	if not title:
 		flash("Title is required")
-		return render_template("update-recipe.html", form_data=form_data), 400
-
+		return redirect(ROUTES.Recipe.replace("<recipe_id>", recipe_id)), 400
 	# Check preparation time
-	prep_time = request.form.get("prepTime")
 	if (prep_time and not prep_time.isdigit()):
 		flash("Preparation time must be a number")
-		return render_template("update-recipe.html", form_data=form_data), 400
-
+		return redirect(ROUTES.Recipe.replace("<recipe_id>", recipe_id)), 400
 	# Check cooking time
-	cooking_time = request.form.get("cookingTime")
 	if not cooking_time:
 		flash("Cooking time is required")
-		return render_template("update-recipe.html", form_data=form_data), 400
+		return redirect(ROUTES.Recipe.replace("<recipe_id>", recipe_id)), 400
 	if not cooking_time.isdigit():
 		flash("Cooking time must be a number")
-		return render_template("update-recipe.html", form_data=form_data), 400
-
-	# Check description
-	description = request.form.get("description")
-	if not description:
-		flash("Description is required")
-		return render_template("update-recipe.html", form_data=form_data), 400
-
+		return redirect(ROUTES.Recipe.replace("<recipe_id>", recipe_id)), 400
 	# Check ingredients
-	ingredients = request.form.getlist("ingredients")
-	ingredients_error_msg = validateIngredients(ingredients)
+	ingredients_error_msg = validateIngredients(ingredient_list)
 	if ingredients_error_msg:
 		flash(ingredients_error_msg)
-		return render_template("update-recipe.html", form_data=form_data), 400
-	
-	# Validate the form, save the record into the DB and redirect the user
-	return redirect(ROUTES.Recipe.replace("<id>", id))
+		return redirect(ROUTES.Recipe.replace("<recipe_id>", recipe_id)), 400
+	# Check description
+	if not description:
+		flash("Description is required")
+		return redirect(ROUTES.Recipe.replace("<recipe_id>", recipe_id)), 400
+
+	flash("Recipe updated")
+
+	return redirect(ROUTES.Recipe.replace("<recipe_id>", recipe_id))
+
+# Define Recipe route
+@App.route(ROUTES.Recipe, methods=["GET"])
+def recipe(recipe_id):
+	(recipe, ingredient_list) = RecipeService.find_recipe_by_id(recipe_id)
+	print(recipe.deleted)
+	# Return the recipe information to the user
+	if (request.method == "GET"):
+		# Get the recipe from the DB based on its id and return it to the user
+		return render_template("recipe.html", recipe=recipe, ingredient_list=ingredient_list)
+
+	return redirect(ROUTES.Recipe.replace("<recipe_id>", recipe_id))
 
 
 # Define My Recipes route

@@ -27,9 +27,7 @@ class RecipeService():
 		title_filter = Recipe.title.like(f"%{title}%")
 		is_active_filter = Recipe.deleted == False
 		# Start recipe query
-		query = Recipe.\
-      		query.\
-			filter(title_filter, is_active_filter)
+		query = Recipe.query.filter(title_filter, is_active_filter)
 		# Filter by user_id if needed
 		if (user_id):
 			query = query.filter(Recipe.user_id == user_id)
@@ -49,39 +47,39 @@ class RecipeService():
 		ingredients_per_recipe = {}
 		for recipeId in recipe_ids_on_page:
 			ingredients = Ingredient.\
-       			query.\
-              	filter(Ingredient.recipe_id == recipeId).\
+				query.\
+				filter(Ingredient.recipe_id == recipeId).\
 				order_by(Ingredient.name.desc()).\
-        		all()
+				all()
 			ingredients_per_recipe[recipeId] = ingredients
 
 		return (paginated_recipes, ingredients_per_recipe)
 
 
-	def insert_recipe(user_id, form_data):
-		def toIngredient(recipe_id):
+	def insert_recipe(user_id, title, prep_time, cooking_time, ingredient_list, description):
+		def to_ingredient(recipe_id):
 			def fn(ingredient):
 				return Ingredient(
-        			recipe_id=recipe_id,
-           			name=ingredient["name"],
-              		amount=ingredient["amount"],
-                	measurement=ingredient["measurement"]
+					recipe_id=recipe_id,
+					name=ingredient["name"],
+					amount=ingredient["amount"],
+					measurement=ingredient["measurement"]
 				)
 			return fn
   
 		newRecipe = Recipe(
-      		user_id=user_id,
-        	title=form_data["title"],
-         	prep_time=form_data["prep_time"],
-          	cooking_time=form_data["cooking_time"],
-           	description=form_data["description"]
+			user_id=user_id,
+			title=title,
+			prep_time=prep_time,
+			cooking_time=cooking_time,
+			description=description,
 		)
   
 		db.session.add(newRecipe)
 		db.session.commit()
   
-		ingredientList = list(map(toIngredient(newRecipe._id), form_data["ingredient_list"]))
-		db.session.add_all(ingredientList)
+		new_ingredients = list(map(to_ingredient(newRecipe._id), ingredient_list))
+		db.session.add_all(new_ingredients)
 		db.session.commit()
 
 		return True
@@ -94,7 +92,8 @@ class RecipeService():
 		db.session.commit()
 
 		return True
-      
+
+   
 	def find_recipe_by_id(recipe_id):
 		recipe = Recipe.query.filter(Recipe._id == recipe_id).first()
 		ingredients = Ingredient.query.filter(Ingredient.recipe_id == recipe._id).all()

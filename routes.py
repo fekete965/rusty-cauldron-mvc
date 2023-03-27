@@ -161,44 +161,42 @@ def add_recipe():
 	ingredient_name_list = request.form.getlist("ingredient")
 	amount_list = request.form.getlist("amount")
 	measurement_list = request.form.getlist("measurement")
-	ingredient_list = list(map(makeIngredientData, zip(ingredient_name_list, amount_list, measurement_list)))
 
-	form_data = {
-		"title": request.form.get("title", ""),
-		"prep_time": request.form.get("prep_time"),
-		"cooking_time": request.form.get("cooking_time"),
-		"ingredient_list" : ingredient_list,
-		"description": request.form.get("description"),
-	}
- 
+	ingredient_list = list(map(makeIngredientData, zip(ingredient_name_list, amount_list, measurement_list)))
+	title = request.form.get("title", "")
+	prep_time = request.form.get("prep_time")
+	cooking_time = request.form.get("cooking_time")
+	description = request.form.get("description")
+	
 	# Check title
-	if not form_data["title"]:
+	if not title:
 		flash("Title is required")
-		return render_template("add-recipe.html", form_data=form_data), 400
+		return render_template("add-recipe.html", title=title, prep_time=prep_time, ingredient_list=ingredient_list, description=description), 400
 	# Check preparation time
-	if (form_data["prep_time"] and not form_data["prep_time"].isdigit()):
+	if (prep_time and not prep_time.isdigit()):
 		flash("Preparation time must be a number")
-		return render_template("add-recipe.html", form_data=form_data), 400
+		return render_template("add-recipe.html", title=title, prep_time=prep_time, ingredient_list=ingredient_list, description=description), 400
 	# Check cooking time
-	if not form_data["cooking_time"]:
+	if not cooking_time:
 		flash("Cooking time is required")
-		return render_template("add-recipe.html", form_data=form_data), 400
-	if not form_data["cooking_time"].isdigit():
+		return render_template("add-recipe.html", title=title, prep_time=prep_time, ingredient_list=ingredient_list, description=description), 400
+	if not cooking_time.isdigit():
 		flash("Cooking time must be a number")
-		return render_template("add-recipe.html", form_data=form_data), 400
+		return render_template("add-recipe.html", title=title, prep_time=prep_time, ingredient_list=ingredient_list, description=description), 400
 	# Check ingredients
-	ingredients_error_msg = validateIngredients(form_data["ingredient_list"])
+	ingredients_error_msg = validateIngredients(ingredient_list)
 	if ingredients_error_msg:
 		flash(ingredients_error_msg)
-		return render_template("add-recipe.html", form_data=form_data), 400
+		return render_template("add-recipe.html", title=title, prep_time=prep_time, ingredient_list=ingredient_list, description=description), 400
 	# Check description
-	if not form_data["description"]:
+	if not description:
 		flash("Description is required")
-		return render_template("add-recipe.html", form_data=form_data), 400
- 
-	RecipeService.insert_recipe(current_user.get_id(), form_data)
-	flash("Recipe added")
+		return render_template("add-recipe.html", title=title, prep_time=prep_time, ingredient_list=ingredient_list, description=description), 400
 
+	user_id = current_user.get_id()
+	RecipeService.insert_recipe(user_id, title=title, prep_time=prep_time, ingredient_list=ingredient_list, description=description)
+
+	flash("Recipe added")
 	return redirect(ROUTES.AddRecipe)
 
 # Define Delete recipe route

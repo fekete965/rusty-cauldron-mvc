@@ -99,3 +99,30 @@ class RecipeService():
 		ingredients = Ingredient.query.filter(Ingredient.recipe_id == recipe._id, Ingredient.deleted == False).all()
 
 		return (recipe, ingredients)
+
+
+	def update_recipe(recipe_id, title, prep_time, cooking_time, ingredient_list, description):  
+		# Update existing recipe
+		db.session.query(Recipe).\
+			filter(Recipe._id == recipe_id).\
+			update({
+       			"title": title,
+				"prep_time": prep_time,
+				"cooking_time": cooking_time,
+				"description": description,
+				"updated_at": func.now(),
+			})
+		db.session.commit()
+  
+		# Remove existing ingredients
+		db.session.query(Ingredient).\
+			filter(Ingredient.recipe_id == recipe_id, Ingredient.deleted == False).\
+			update({ "deleted": True, "updated_at": func.now() })
+		db.session.commit()
+  
+		# Insert ingredients
+		new_ingredients = list(map(RecipeService.to_ingredient(recipe_id), ingredient_list))
+		db.session.add_all(new_ingredients)
+		db.session.commit()
+
+		return True

@@ -10,13 +10,15 @@ class Ingredient(db.Model):
     name = db.Column("name", db.String(100), nullable=False)
     amount = db.Column("amount", db.Float, nullable=False)
     measurement = db.Column("measurement", db.String(50), nullable=False)
+    deleted = db.Column("deleted", db.Boolean, nullable=False, default=False)
     created_at = db.Column("created_at", db.DateTime, nullable=False, default=func.now())
     updated_at = db.Column("updated_at", db.DateTime, nullable=False, default=func.now())
 
-    def __init__(self, recipe_id, name, amount, measurement, created_at=func.now(), updated_at=func.now()):
+    def __init__(self, recipe_id, name, amount, measurement, deleted=False, created_at=func.now(), updated_at=func.now()):
         self.recipe_id = recipe_id
         self.name = name
         self.amount = amount
         self.measurement = measurement
+        self.deleted = deleted
         self.created_at = created_at
         self.updated_at = updated_at

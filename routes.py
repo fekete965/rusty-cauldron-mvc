@@ -120,7 +120,7 @@ def login():
 	login_user(user, remember=True)
 
 	# Redirect the user
-	return redirect(next or ROUTES.Home)
+	return redirect(ROUTES.Home)
 
 
 # Define Logout route

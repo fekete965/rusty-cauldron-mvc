@@ -34,7 +34,7 @@ class RecipeService():
 		# If we have ingredient, add additional filter to the initial query
 		if filtered_ingredients:
 			filtered_ingredients = list(map(lambda i: i[0], filtered_ingredients))
-			query = query.filter(Recipe._id.in_(filtered_ingredients))
+			query = query.filter(Recipe._id.in_(filtered_ingredients), Ingredient.deleted == False)
 
 		# Prepare order by
 		order_by = Recipe.created_at.desc()
@@ -48,7 +48,7 @@ class RecipeService():
 		for recipeId in recipe_ids_on_page:
 			ingredients = Ingredient.\
 				query.\
-				filter(Ingredient.recipe_id == recipeId).\
+				filter(Ingredient.recipe_id == recipeId, Ingredient.deleted == False).\
 				order_by(Ingredient.name.desc()).\
 				all()
 			ingredients_per_recipe[recipeId] = ingredients
@@ -96,6 +96,6 @@ class RecipeService():
    
 	def find_recipe_by_id(recipe_id):
 		recipe = Recipe.query.filter(Recipe._id == recipe_id).first()
-		ingredients = Ingredient.query.filter(Ingredient.recipe_id == recipe._id).all()
+		ingredients = Ingredient.query.filter(Ingredient.recipe_id == recipe._id, Ingredient.deleted == False).all()
 
 		return (recipe, ingredients)

@@ -10,14 +10,14 @@ VALUES (2, 'Fluffy Pancakes', 10, 15,
   5. Cook until small bubbles form on the surface, then flip and cook for an additional 2 minutes. 
   6. Serve hot with syrup and butter.', 0);
 
-INSERT INTO ingredients (recipe_id, name, amount, measurement) 
-VALUES ((SELECT id FROM recipes WHERE title = 'Fluffy Pancakes' AND user_id = 2), 'flour', 1, 'cup'),
-       ((SELECT id FROM recipes WHERE title = 'Fluffy Pancakes' AND user_id = 2), 'sugar', 2, 'tbs'),
-       ((SELECT id FROM recipes WHERE title = 'Fluffy Pancakes' AND user_id = 2), 'baking powder', 2, 'tsp'),
-       ((SELECT id FROM recipes WHERE title = 'Fluffy Pancakes' AND user_id = 2), 'salt', 0.5, 'tsp'),
-       ((SELECT id FROM recipes WHERE title = 'Fluffy Pancakes' AND user_id = 2), 'milk', 1, 'cup'),
-       ((SELECT id FROM recipes WHERE title = 'Fluffy Pancakes' AND user_id = 2), 'egg', 1, 'small'),
-       ((SELECT id FROM recipes WHERE title = 'Fluffy Pancakes' AND user_id = 2), 'butter', 2, 'tbs');
+INSERT INTO ingredients (recipe_id, name, amount, measurement, deleted) 
+VALUES ((SELECT id FROM recipes WHERE title = 'Fluffy Pancakes' AND user_id = 2), 'flour', 1, 'cup', 0),
+       ((SELECT id FROM recipes WHERE title = 'Fluffy Pancakes' AND user_id = 2), 'sugar', 2, 'tbs', 0),
+       ((SELECT id FROM recipes WHERE title = 'Fluffy Pancakes' AND user_id = 2), 'baking powder', 2, 'tsp', 0),
+       ((SELECT id FROM recipes WHERE title = 'Fluffy Pancakes' AND user_id = 2), 'salt', 0.5, 'tsp', 0),
+       ((SELECT id FROM recipes WHERE title = 'Fluffy Pancakes' AND user_id = 2), 'milk', 1, 'cup', 0),
+       ((SELECT id FROM recipes WHERE title = 'Fluffy Pancakes' AND user_id = 2), 'egg', 1, 'small', 0),
+       ((SELECT id FROM recipes WHERE title = 'Fluffy Pancakes' AND user_id = 2), 'butter', 2, 'tbs', 0);
 
 INSERT INTO recipes (user_id, title, prep_time, cooking_time, description, deleted)
 VALUES (2, 'Strawberry Shortcake', 30, 30, 'Strawberry Shortcake Recipe:\n\n
@@ -35,12 +35,12 @@ VALUES (2, 'Strawberry Shortcake', 30, 30, 'Strawberry Shortcake Recipe:\n\n
 12. Replace tops of biscuits.\n
 13. Serve immediately.', 0);
 
-INSERT INTO ingredients (recipe_id, name, amount, measurement)
-VALUES ((SELECT id FROM recipes WHERE title = 'Strawberry Shortcake' AND user_id = 2), 'flour', 2, 'cup'),
-       ((SELECT id FROM recipes WHERE title = 'Strawberry Shortcake' AND user_id = 2), 'sugar', 3, 'tbs'),
-       ((SELECT id FROM recipes WHERE title = 'Strawberry Shortcake' AND user_id = 2), 'baking powder', 1, 'tsp'),
-       ((SELECT id FROM recipes WHERE title = 'Strawberry Shortcake' AND user_id = 2), 'salt', 0.25, 'tsp'),
-       ((SELECT id FROM recipes WHERE title = 'Strawberry Shortcake' AND user_id = 2), 'butter', 0.25, 'cup'),
-       ((SELECT id FROM recipes WHERE title = 'Strawberry Shortcake' AND user_id = 2), 'milk', 0.25, 'cup'),
-       ((SELECT id FROM recipes WHERE title = 'Strawberry Shortcake' AND user_id = 2), 'strawberries', 2, 'cup'),
-       ((SELECT id FROM recipes WHERE title = 'Strawberry Shortcake' AND user_id = 2), 'whipped cream', 1, 'cup');
+INSERT INTO ingredients (recipe_id, name, amount, measurement, deleted)
+VALUES ((SELECT id FROM recipes WHERE title = 'Strawberry Shortcake' AND user_id = 2), 'flour', 2, 'cup', 0),
+       ((SELECT id FROM recipes WHERE title = 'Strawberry Shortcake' AND user_id = 2), 'sugar', 3, 'tbs', 0),
+       ((SELECT id FROM recipes WHERE title = 'Strawberry Shortcake' AND user_id = 2), 'baking powder', 1, 'tsp', 0),
+       ((SELECT id FROM recipes WHERE title = 'Strawberry Shortcake' AND user_id = 2), 'salt', 0.25, 'tsp', 0),
+       ((SELECT id FROM recipes WHERE title = 'Strawberry Shortcake' AND user_id = 2), 'butter', 0.25, 'cup', 0),
+       ((SELECT id FROM recipes WHERE title = 'Strawberry Shortcake' AND user_id = 2), 'milk', 0.25, 'cup', 0),
+       ((SELECT id FROM recipes WHERE title = 'Strawberry Shortcake' AND user_id = 2), 'strawberries', 2, 'cup', 0),
+       ((SELECT id FROM recipes WHERE title = 'Strawberry Shortcake' AND user_id = 2), 'whipped cream', 1, 'cup', 0);

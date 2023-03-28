@@ -11,16 +11,16 @@ VALUES (5, 'Lemon Garlic Chicken', 15, 35, 'Lemon Garlic Chicken is a simple, de
 6. Serve the chicken hot with a squeeze of lemon juice and a sprinkle of chopped parsley.
 Enjoy your delicious Lemon Garlic Chicken!', 0);
 
-INSERT INTO ingredients (recipe_id, name, amount, measurement)
-VALUES ((SELECT id FROM recipes WHERE title = 'Lemon Garlic Chicken' AND user_id = 5), 'Lemon juice', 1, 'large'),
-       ((SELECT id FROM recipes WHERE title = 'Lemon Garlic Chicken' AND user_id = 5), 'Garlic cloves', 4, 'medium'),
-       ((SELECT id FROM recipes WHERE title = 'Lemon Garlic Chicken' AND user_id = 5), 'Olive oil', 2, 'tbs'),
-       ((SELECT id FROM recipes WHERE title = 'Lemon Garlic Chicken' AND user_id = 5), 'Salt', 1, 'tsp'),
-       ((SELECT id FROM recipes WHERE title = 'Lemon Garlic Chicken' AND user_id = 5), 'Pepper', 1, 'tsp'),
-       ((SELECT id FROM recipes WHERE title = 'Lemon Garlic Chicken' AND user_id = 5), 'Dried oregano', 1, 'tsp'),
-       ((SELECT id FROM recipes WHERE title = 'Lemon Garlic Chicken' AND user_id = 5), 'Chicken breasts', 4, 'large'),
-       ((SELECT id FROM recipes WHERE title = 'Lemon Garlic Chicken' AND user_id = 5), 'Lemon juice', 1, 'large'),
-       ((SELECT id FROM recipes WHERE title = 'Lemon Garlic Chicken' AND user_id = 5), 'Parsley', 1, 'large');
+INSERT INTO ingredients (recipe_id, name, amount, measurement, deleted)
+VALUES ((SELECT id FROM recipes WHERE title = 'Lemon Garlic Chicken' AND user_id = 5), 'Lemon juice', 1, 'large', 0),
+       ((SELECT id FROM recipes WHERE title = 'Lemon Garlic Chicken' AND user_id = 5), 'Garlic cloves', 4, 'medium', 0),
+       ((SELECT id FROM recipes WHERE title = 'Lemon Garlic Chicken' AND user_id = 5), 'Olive oil', 2, 'tbs', 0),
+       ((SELECT id FROM recipes WHERE title = 'Lemon Garlic Chicken' AND user_id = 5), 'Salt', 1, 'tsp', 0),
+       ((SELECT id FROM recipes WHERE title = 'Lemon Garlic Chicken' AND user_id = 5), 'Pepper', 1, 'tsp', 0),
+       ((SELECT id FROM recipes WHERE title = 'Lemon Garlic Chicken' AND user_id = 5), 'Dried oregano', 1, 'tsp', 0),
+       ((SELECT id FROM recipes WHERE title = 'Lemon Garlic Chicken' AND user_id = 5), 'Chicken breasts', 4, 'large', 0),
+       ((SELECT id FROM recipes WHERE title = 'Lemon Garlic Chicken' AND user_id = 5), 'Lemon juice', 1, 'large', 0),
+       ((SELECT id FROM recipes WHERE title = 'Lemon Garlic Chicken' AND user_id = 5), 'Parsley', 1, 'large', 0);
 
 INSERT INTO recipes (user_id, title, prep_time, cooking_time, description, deleted)
 VALUES (5, 'Classic Macaroni and Cheese', 20, 30, 'To make this delicious classic Macaroni and Cheese, follow these steps:
@@ -30,12 +30,12 @@ VALUES (5, 'Classic Macaroni and Cheese', 20, 30, 'To make this delicious classi
 4. Combine cooked macaroni with the cheese sauce and pour into a baking dish. Top with breadcrumbs and bake at 350°F for 20 minutes or until the top is golden brown.
 5. Serve hot and enjoy!', 0);
 
-INSERT INTO ingredients (recipe_id, name, amount, measurement)
-VALUES ((SELECT id FROM recipes WHERE user_id = 5 AND title = 'Classic Macaroni and Cheese'), 'macaroni', 1, 'lb'),
-       ((SELECT id FROM recipes WHERE user_id = 5 AND title = 'Classic Macaroni and Cheese'), 'butter', 2, 'tbs'),
-       ((SELECT id FROM recipes WHERE user_id = 5 AND title = 'Classic Macaroni and Cheese'), 'flour', 1, 'tbs'),
-       ((SELECT id FROM recipes WHERE user_id = 5 AND title = 'Classic Macaroni and Cheese'), 'milk', 2, 'cup'),
-       ((SELECT id FROM recipes WHERE user_id = 5 AND title = 'Classic Macaroni and Cheese'), 'cheddar cheese', 2, 'cup'),
-       ((SELECT id FROM recipes WHERE user_id = 5 AND title = 'Classic Macaroni and Cheese'), 'salt', 0.5, 'tsp'),
-       ((SELECT id FROM recipes WHERE user_id = 5 AND title = 'Classic Macaroni and Cheese'), 'pepper', 0.5, 'tsp'),
-       ((SELECT id FROM recipes WHERE user_id = 5 AND title = 'Classic Macaroni and Cheese'), 'breadcrumbs', 0.5, 'cup');
+INSERT INTO ingredients (recipe_id, name, amount, measurement, deleted)
+VALUES ((SELECT id FROM recipes WHERE title = 'Classic Macaroni and Cheese' AND user_id = 5), 'macaroni', 1, 'lb', 0),
+       ((SELECT id FROM recipes WHERE title = 'Classic Macaroni and Cheese' AND user_id = 5), 'butter', 2, 'tbs', 0),
+       ((SELECT id FROM recipes WHERE title = 'Classic Macaroni and Cheese' AND user_id = 5), 'flour', 1, 'tbs', 0),
+       ((SELECT id FROM recipes WHERE title = 'Classic Macaroni and Cheese' AND user_id = 5), 'milk', 2, 'cup', 0),
+       ((SELECT id FROM recipes WHERE title = 'Classic Macaroni and Cheese' AND user_id = 5), 'cheddar cheese', 2, 'cup', 0),
+       ((SELECT id FROM recipes WHERE title = 'Classic Macaroni and Cheese' AND user_id = 5), 'salt', 0.5, 'tsp', 0),
+       ((SELECT id FROM recipes WHERE title = 'Classic Macaroni and Cheese' AND user_id = 5), 'pepper', 0.5, 'tsp', 0),
+       ((SELECT id FROM recipes WHERE title = 'Classic Macaroni and Cheese' AND user_id = 5), 'breadcrumbs', 0.5, 'cup', 0);

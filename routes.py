@@ -257,6 +257,14 @@ def update_recipe(recipe_id):
 		return redirect(ROUTES.Recipe.replace("<recipe_id>", recipe_id)), 400
 
 	flash("Recipe updated")
+	RecipeService.update_recipe(
+		recipe_id=recipe_id,
+		title=title,
+		prep_time=prep_time,
+		cooking_time=cooking_time,
+		ingredient_list=ingredient_list,
+		description=description,
+  	)
 
 	return redirect(ROUTES.Recipe.replace("<recipe_id>", recipe_id))
 

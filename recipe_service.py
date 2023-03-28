@@ -5,6 +5,16 @@ from utils.main import xstr
 from app import db
 
 class RecipeService():
+	def to_ingredient(recipe_id):
+		def fn(ingredient):
+			return Ingredient(
+				recipe_id=recipe_id,
+				name=ingredient["name"],
+				amount=ingredient["amount"],
+				measurement=ingredient["measurement"]
+			)
+		return fn
+
 	# Get optional recipe ids from ingredients
 	def get_recipe_ids_from_filtered_ingredients(ingredients):
 		if len(ingredients) == 0:
@@ -56,17 +66,7 @@ class RecipeService():
 		return (paginated_recipes, ingredients_per_recipe)
 
 
-	def insert_recipe(user_id, title, prep_time, cooking_time, ingredient_list, description):
-		def to_ingredient(recipe_id):
-			def fn(ingredient):
-				return Ingredient(
-					recipe_id=recipe_id,
-					name=ingredient["name"],
-					amount=ingredient["amount"],
-					measurement=ingredient["measurement"]
-				)
-			return fn
-  
+	def insert_recipe(user_id, title, prep_time, cooking_time, ingredient_list, description):  
 		newRecipe = Recipe(
 			user_id=user_id,
 			title=title,
@@ -78,7 +78,7 @@ class RecipeService():
 		db.session.add(newRecipe)
 		db.session.commit()
   
-		new_ingredients = list(map(to_ingredient(newRecipe._id), ingredient_list))
+		new_ingredients = list(map(RecipeService.to_ingredient(newRecipe._id), ingredient_list))
 		db.session.add_all(new_ingredients)
 		db.session.commit()
 

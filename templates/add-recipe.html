@@ -1,3 +1,5 @@
+{% import 'macros.html' as macros %}
+
 {% extends "layout.html" %}
 
 {% block title %}
@@ -9,24 +11,26 @@
   <h1 class="text-2xl text-center">Add a recipe</h1>
   <form action="/recipes/new" class="mt-4" method="POST">
     <div class="form-group mb-6">
-      <input type="input" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ title }}" name="title" placeholder="Title" />
+      {{ macros.inputWithLabel(name="title", value=title, label="Title:") }}
     </div>
     <div class="form-group mb-6">
-      <input type="number" min="0" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ prep_time }}" name="prep_time" placeholder="Preparation time (minute)" />
+      {{ macros.inputWithLabel(name="prep_time", type="number", min="0", value=prep_time, label="Preparation time (minute):") }}
     </div>
     <div class="form-group mb-6">
-      <input type="number" min="0" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ cooking_time }}" name="cooking_time" placeholder="Cooking time (minute)" />
+      {{ macros.inputWithLabel(name="cooking_time", type="number", min="0", value=cooking_time, label="Cooking time (minute):") }}
     </div>
     <div>
     <div class="form-group mb-6">
       <div class="mt-4">
-        <button class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 w-full" type="button" onclick="handleOnAddBtnClick()">Add ingredient</button>
+        <div class="mt-4 grid grid-cols-1">
+          {{ macros.button(text="Add ingredient", type="button", onclick="handleOnAddBtnClick()") }}
+        </div>
       </div>
       <div id="measurements">
         {% for ingredient in ingredient_list %}
           <div class="grid gap-2 grid-cols-[auto_7rem_5rem_3rem] mt-4">
-            <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ ingredient['name'] }}" name="ingredient" placeholder="Ingredient" />
-            <input type="number" min="0.1" step="0.1" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ ingredient['amount'] }}" name="amount" placeholder="Amount" />
+            {{ macros.input(name="ingredient", type="text", value=ingredient['name'], placeholder="Ingredient") }}
+            {{ macros.input(name="amount", type="number", min="0.1", step="0.1", value=ingredient['amount'], placeholder="Amount") }}
             <select class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" name="measurement" selected="{{ ingredient['measurement'] }}">
               <option value="cl">cl</option>
               <option value="cup">cup</option>
@@ -51,7 +55,7 @@
               <option value="tbs">tbs</option>
               <option value="tsp">tsp</option>
             </select>
-            <button class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 w-full" type="button" onclick="handleOnRemoveBtnClick(event)">X</button>
+            {{ macros.button(text="X", type="button", onclick="handleOnRemoveBtnClick(event)") }}
           </div>
         {% endfor %}
       </div>
@@ -59,7 +63,9 @@
     <div class="form-group mb-6">
       <textarea class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" rows="10" name="description" placeholder="Description of the recipe">{{ description }}</textarea>
     </div>
-    <button class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 w-full" type="submit">Add Recipe</button>
+    <div class="mt-4 grid grid-cols-1">
+      {{ macros.button(text="Add Recipe") }}
+    </div>
   </form>
 </div>
 

@@ -225,7 +225,6 @@ def update_recipe(recipe_id):
 	measurement_list = request.form.getlist("measurement")
 	
 	ingredient_list = list(map(makeIngredientData, zip(ingredient_name_list, amount_list, measurement_list)))
-	recipe_user_id = request.form.getlist("ingredient")
 	title = request.form.get("title", "")
 	prep_time = request.form.get("prep_time")
 	cooking_time = request.form.get("cooking_time")
@@ -272,7 +271,6 @@ def update_recipe(recipe_id):
 @App.route(ROUTES.Recipe, methods=["GET"])
 def recipe(recipe_id):
 	(recipe, ingredient_list) = RecipeService.find_recipe_by_id(recipe_id)
-	print(recipe.deleted)
 	# Return the recipe information to the user
 	if (request.method == "GET"):
 		# Get the recipe from the DB based on its id and return it to the user

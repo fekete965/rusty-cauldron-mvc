@@ -202,7 +202,7 @@ def add_recipe():
 def delete_recipe(recipe_id):
 	user_id = current_user.get_id()
 
-	if (not current_user or user_id != request.form.get("owner_user_id")):
+	if (not current_user or str(user_id) != request.form.get("owner_user_id")):
 		flash("You are not allowed to perform this action")	
 		return redirect(ROUTES.Recipe.replace("<recipe_id>", recipe_id))
 
@@ -216,7 +216,7 @@ def delete_recipe(recipe_id):
 def update_recipe(recipe_id):
 	user_id = current_user.get_id()
  
-	if (not current_user or user_id != request.form.get("owner_user_id")):
+	if (not current_user or str(user_id) != request.form.get("owner_user_id")):
 		flash("You are not allowed to perform this action")
 		return redirect(ROUTES.Recipe.replace("<recipe_id>", recipe_id))
  

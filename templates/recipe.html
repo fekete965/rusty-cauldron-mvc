@@ -64,10 +64,12 @@
     </div>
   </form>
   <div>
-    <button class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 w-full" form="update" type="submit">Update Recipe</button>
+    <div class="mt-4 grid grid-cols-1">
+      {{ macros.button(text="Update Recipe", form="update") }}
+    </div>
     <form id="delete" action="/recipes/{{ recipe._id }}/delete" class="mt-4 grid grid-cols-1" method="POST">
       <input type="hidden" value="{{ recipe.user_id }}" name="owner_user_id" />
-      {{ macros.button(text="Delete Recipe", form="delete" ) }}
+      {{ macros.button(text="Delete Recipe", form="delete") }}
     </form>
   </div>
 </div>

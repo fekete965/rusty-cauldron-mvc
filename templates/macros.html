@@ -1,17 +1,20 @@
-{% macro input(name, step, min='', placeholder='', value='', type='text') -%}
-    <input 
-      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-      type="{{ type }}"
-      name="{{ name }}"
-      min="{{ min }}"
-      value="{{ value|e }}"
-      step="{{ step }}"
-      placeholder="{{ placeholder }}"
-    >
+{% macro input(name, step, id='', min='', placeholder='', value='', type='text') -%}
+  <input 
+    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+    type="{{ type }}"
+    name="{{ name }}"
+    min="{{ min }}"
+    value="{{ value|e }}"
+    {% if id != '' %}
+      id="{{ id }}"
+    {% endif %}
+    step="{{ step }}"
+    placeholder="{{ placeholder }}"
+  >
 {%- endmacro %}
 
 {% macro label(for, label) -%}
-<label class="block text-sm font-medium text-gray-900" for="{{ for }}">{{ label }}</label>
+  <label class="block text-sm font-medium text-gray-900" for="{{ for }}">{{ label }}</label>
 {%- endmacro %}
 
 {% macro inputWithLabel(name, step, label, min='', placeholder='', value='', type='text') -%}
@@ -21,10 +24,34 @@
       type="{{ type }}"
       name="{{ name }}"
       min="{{ min }}"
+      id="{{ name }}"
       value="{{ value|e }}"
       step="{{ step }}"
       placeholder="{{ placeholder }}"
     >
+{%- endmacro %}
+
+{% macro textarea(name, placeholder='', id='', value='', rows='10') %}
+  <textarea\
+    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+    rows="{{ rows }}"
+    name="{{ name }}"
+    {% if id != '' %}
+      id="{{ form }}"
+    {% endif %}
+    placeholder="{{ placeholder }}"
+  >{{ value }}</textarea>
+{%- endmacro %}
+
+{% macro textareaWithLabel(name, label, placeholder='', id='', value='', rows='10') %}
+  <label class="block text-sm font-medium text-gray-900" for="{{ name }}">{{ label }}</label>
+  <textarea
+    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+    rows="{{ rows }}"
+    name="{{ name }}"
+    id="{{ name }}"
+    placeholder="{{ placeholder }}"
+  >{{ value }}</textarea>
 {%- endmacro %}
 
 {% macro button(text, form="", type="submit", onclick='') %}

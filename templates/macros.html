@@ -1,8 +1,9 @@
-{% macro input(name, step, placeholder='', value='', type='text') -%}
+{% macro input(name, step, min='', placeholder='', value='', type='text') -%}
     <input 
       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
       type="{{ type }}"
       name="{{ name }}"
+      min="{{ min }}"
       value="{{ value|e }}"
       step="{{ step }}"
       placeholder="{{ placeholder }}"
@@ -13,20 +14,30 @@
 <label class="block text-sm font-medium text-gray-900" for="{{ for }}">{{ label }}</label>
 {%- endmacro %}
 
-{% macro inputWithLabel(name, step, label, placeholder='', value='', type='text') -%}
+{% macro inputWithLabel(name, step, label, min='', placeholder='', value='', type='text') -%}
     <label class="block text-sm font-medium text-gray-900" for="{{ name }}">{{ label }}</label>
     <input 
       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
       type="{{ type }}"
       name="{{ name }}"
+      min="{{ min }}"
       value="{{ value|e }}"
       step="{{ step }}"
       placeholder="{{ placeholder }}"
     >
 {%- endmacro %}
 
-{% macro button(text, type="submit") %}
-  <button class="leading-[1.125rem] text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-6 py-3 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700" type="{{ type }}">{{ text }}</button>
+{% macro button(text, form="", type="submit", onclick='') %}
+  <button
+    class="flex justify-center leading-[1.125rem] text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-6 py-3 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+    type="{{ type }}"
+    {% if form != '' %}
+      form="{{ form }}"
+    {% endif %}
+    onclick="{{ onclick }}"
+  >
+    {{ text }}
+  </button>
 {%- endmacro %}
 
 {% macro pagination(show_pagination, aria_label, first, last, total, has_prev, prev_num, iter_pages, current_page, has_next, next_num, form_id) %}

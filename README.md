@@ -4,7 +4,7 @@
 
 ##### Description
 
-The project is a multi page application using python with flask. (Libraries list can be found below the description block). The application's theme was insipred by the CS50 course itself. (Harry Potter) This application allows the users to search recipes. You can also register, login and post your own recipe. You are also able to list out your own recipes and modify them.
+The project is a multi page application using python with flask. (Libraries list can be found below the description block). The application's theme was inspired by the CS50 course itself. (Harry Potter) This application allows the users to search recipes. You can also register, login and post your own recipe. You are also able to list out your own recipes and modify them.
 
 ---
 
@@ -16,8 +16,31 @@ The project is a multi page application using python with flask. (Libraries list
 - flask-sqlalchemy
 - werkzeug
 - dateutil
+- datetime
 
 ---
+
+##### Folder structure
+
+The project contains the following folder:
+
+- `migrations`: It contains the sql migration files. They are used to prepare then pre-populate the database
+- `static`: It contains the static assets for the html files eg.: css, js, images etc...
+- `tables`: It contains the table + related class definition
+- `templates`: It contains the template files
+- `utils`: It contains a shared place for the utility functions related to this project
+
+##### Files in the root folder
+
+The root folder contains the following files:
+
+- `app.py`: This file performs the necessary steps to setup the application
+- `constants.py`: This file contains the constant variable
+- `login_manager.py`: This file contains the `login_manager` and related decorator and utility function definitions
+- `bootstrap_database.py`: This file create and pre-populate the Sqlite database
+- `routes.py`: This file contains all of the route definitions
+- `recipe_service.py`: This file contains the RecipeService class which is a helper class that can be use to perform recipe related actions
+- `users_service.py`: This file contains the UserService class which is a helper class that can be use to perform user related actions
 
 ##### Prerequisite:
 
@@ -39,11 +62,11 @@ The project is a multi page application using python with flask. (Libraries list
 3. ###### Database
    ###### Create the database:
    In order to create the database run the following command in the project folder:\
-   `bash python ./prepare-database.py`
+   `bash python ./bootstrap_database.py`
    ###### Delete the database:
    If you messed up the database, you can always delete it by running following command in the project folder:\
    To remove the database run the following command in the project folder:\
-   `bash rm ./prepare-database.py`
+   `bash rm ./bootstrap_database.py`
 
 ---
 
@@ -63,33 +86,33 @@ To run the application, run the following command in the project folder:\
 
 ##### You can always use any of the following emails and passwords to login an play with the application:
 
-| Email                                | Password       |
-| ------------------------------------ | -------------- |
-| alastor-moody@owl-postal.co.uk       | `Password123!` |
-| albus-dumbledore@owl-postal.co.uk    | `Password123!` |
-| argus-filch@owl-postal.co.uk         | `Password123!` |
-| bellatrix-lestrange@owl-postal.co.uk | `Password123!` |
-| dolores-umbridge@owl-postal.co.uk    | `Password123!` |
-| dooby@owl-postal.co.uk               | `Password123!` |
-| draco-malfoy@owl-postal.co.uk        | `Password123!` |
-| dudley-dursley@owl-postal.co.uk      | `Password123!` |
-| fleur-delacour@owl-postal.co.uk      | `Password123!` |
-| gellert-grindewald@owl-postal.co.uk  | `Password123!` |
-| ginny-weasley@owl-postal.co.uk       | `Password123!` |
-| harry-potter@owl-postal.co.uk        | `Password123!` |
-| hermione-granger@owl-postal.co.uk    | `Password123!` |
-| james-potter@owl-postal.co.uk        | `Password123!` |
-| lily-potter@owl-postal.co.uk         | `Password123!` |
-| lucius-malfoy@owl-postal.co.uk       | `Password123!` |
-| luna-lovegood@owl-postal.co.uk       | `Password123!` |
-| minerva-mcgonagall@owl-postal.co.uk  | `Password123!` |
-| neville-longbottom@owl-postal.co.uk  | `Password123!` |
-| newt-scamander@owl-postal.co.uk      | `Password123!` |
-| nymphadora-tonks@owl-postal.co.uk    | `Password123!` |
-| peter-pettigrew@owl-postal.co.uk     | `Password123!` |
-| rebeus-hagrid@owl-postal.co.uk       | `Password123!` |
-| remus-lupin@owl-postal.co.uk         | `Password123!` |
-| ron-weasley@owl-postal.co.uk         | `Password123!` |
-| severus-snape@owl-postal.co.uk       | `Password123!` |
-| sirius-black@owl-postal.co.uk        | `Password123!` |
-| tom-riddle@owl-postal.co.uk          | `Password123!` |
+| Id  | Email                                | Password       | Has Recipes |
+| --- | ------------------------------------ | -------------- | ----------- |
+| 25  | alastor-moody@owl-postal.co.uk       | `Password123!` | No          |
+| 4   | albus-dumbledore@owl-postal.co.uk    | `Password123!` | Yes         |
+| 27  | argus-filch@owl-postal.co.uk         | `Password123!` | No          |
+| 12  | bellatrix-lestrange@owl-postal.co.uk | `Password123!` | No          |
+| 16  | dolores-umbridge@owl-postal.co.uk    | `Password123!` | No          |
+| 11  | dooby@owl-postal.co.uk               | `Password123!` | No          |
+| 5   | draco-malfoy@owl-postal.co.uk        | `Password123!` | Yes         |
+| 23  | dudley-dursley@owl-postal.co.uk      | `Password123!` | No          |
+| 26  | fleur-delacour@owl-postal.co.uk      | `Password123!` | No          |
+| 17  | gellert-grindewald@owl-postal.co.uk  | `Password123!` | No          |
+| 18  | ginny-weasley@owl-postal.co.uk       | `Password123!` | No          |
+| 1   | harry-potter@owl-postal.co.uk        | `Password123!` | Yes         |
+| 2   | hermione-granger@owl-postal.co.uk    | `Password123!` | Yes         |
+| 28  | james-potter@owl-postal.co.uk        | `Password123!` | No          |
+| 21  | lily-potter@owl-postal.co.uk         | `Password123!` | No          |
+| 22  | lucius-malfoy@owl-postal.co.uk       | `Password123!` | No          |
+| 9   | luna-lovegood@owl-postal.co.uk       | `Password123!` | No          |
+| 10  | minerva-mcgonagall@owl-postal.co.uk  | `Password123!` | No          |
+| 14  | neville-longbottom@owl-postal.co.uk  | `Password123!` | No          |
+| 20  | newt-scamander@owl-postal.co.uk      | `Password123!` | No          |
+| 24  | nymphadora-tonks@owl-postal.co.uk    | `Password123!` | No          |
+| 19  | peter-pettigrew@owl-postal.co.uk     | `Password123!` | No          |
+| 7   | rebeus-hagrid@owl-postal.co.uk       | `Password123!` | No          |
+| 15  | remus-lupin@owl-postal.co.uk         | `Password123!` | No          |
+| 8   | ron-weasley@owl-postal.co.uk         | `Password123!` | No          |
+| 6   | severus-snape@owl-postal.co.uk       | `Password123!` | No          |
+| 13  | sirius-black@owl-postal.co.uk        | `Password123!` | No          |
+| 3   | tom-riddle@owl-postal.co.uk          | `Password123!` | Yes         |

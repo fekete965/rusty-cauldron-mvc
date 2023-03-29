@@ -1,4 +1,5 @@
 from flask_login import UserMixin
+from sqlalchemy import func
 from app import db
 from utils.main import get_timestamp
 
@@ -12,10 +13,10 @@ class User(db.Model, UserMixin):
     email = db.Column("email", db.String(255), unique=True, nullable=False)
     password = db.Column("password", db.String(255), nullable=False)
     deleted = db.Column("deleted", db.Boolean, nullable=False, default=False)
-    created_at = db.Column("created_at", db.DateTime, nullable=False, default=get_timestamp())
-    updated_at = db.Column("updated_at", db.DateTime, nullable=False, default=get_timestamp())
+    created_at = db.Column("created_at", db.DateTime, nullable=False, default=func.now())
+    updated_at = db.Column("updated_at", db.DateTime, nullable=False, default=func.now())
 
-    def __init__(self, first_name, last_name, email, password, deleted=False, created_at=get_timestamp(), updated_at=get_timestamp()):
+    def __init__(self, first_name, last_name, email, password, deleted=False, created_at=func.now(), updated_at=func.now()):
         self.first_name = first_name
         self.last_name = last_name
         self.email = email

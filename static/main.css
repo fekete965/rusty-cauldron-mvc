@@ -13,3 +13,11 @@ body {
   font-family: harry-potter;
   height: 100vh;
 }
+
+#search-bar.show {
+  display: block;
+}
+
+#navbar.show {
+  display: block;
+}

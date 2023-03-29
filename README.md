@@ -2,6 +2,10 @@
 
 #### CS50 final project
 
+##### Video Url:
+
+https://www.loom.com/share/2bc603e03dc04ace857fb567ed81daac
+
 ##### Description
 
 The project is a multi page application using python with flask. (Libraries list can be found below the description block). The application's theme was inspired by the CS50 course itself. (Harry Potter) This application allows the users to search recipes. You can also register, login and post your own recipe. You are also able to list out your own recipes and modify them.

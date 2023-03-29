@@ -34,8 +34,8 @@ def sign_up():
 		return render_template("signup.html", form_data=None)
 
 	form_data = {
-		"first_name": request.form.get("firstName"),
-		"last_name": request.form.get("lastName"),
+		"first_name": request.form.get("first_name"),
+		"last_name": request.form.get("last_name"),
 		"email": request.form.get("email"),
 		"password": request.form.get("password"),
 		"confirmation": request.form.get("confirmation"),
@@ -81,7 +81,12 @@ def sign_up():
 		return render_template("signup.html"), 400	
 
 	# Call userService to create a user
-	UserService.create_user(form_data['first_name'], form_data['last_name'], form_data['email'], generate_password_hash(form_data['password']))
+	UserService.create_user(
+		first_name=form_data['first_name'],
+		last_name=form_data['last_name'],
+		email=form_data['email'],
+		password=generate_password_hash(form_data['password'])
+	)
 	return redirect(ROUTES.Login)
 
 

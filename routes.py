@@ -78,7 +78,7 @@ def sign_up():
 	user = UserService.get_user_by_email(form_data["email"])
 	if user:
 		flash("Email is already in use")
-		return render_template("signup.html"), 400	
+		return render_template("signup.html", form_data=form_data), 400	
 
 	# Call userService to create a user
 	UserService.create_user(

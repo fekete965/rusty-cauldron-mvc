@@ -9,7 +9,7 @@
 {% block main %}
 <div class="m-auto block p-6 rounded-lg shadow-lg bg-white max-w-2xl">
   <h1 class="text-2xl text-center">{{ recipe.title }}</h1>
-  {% if current_user.get_id() == recipe._id %}
+  {% if not current_user.is_authenticated or current_user.get_id() == recipe._id %}
     <div class="mt-4">
       <div class="grid grid-cols-2 justify-center">
         <span class="block text-sm">Preparation time: {{ recipe.prep_time }} minute(s)</span>

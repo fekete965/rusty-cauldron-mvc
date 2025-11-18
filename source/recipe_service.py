@@ -1,5 +1,6 @@
 from django.core.paginator import Paginator
 from django.db.models import Q
+
 from tables.ingredients import Ingredient
 from tables.recipes import Recipe
 from utils.main import xstr
@@ -13,8 +14,9 @@ class RecipeService:
                 recipe_id=recipe_id,
                 name=ingredient["name"],
                 amount=ingredient["amount"],
-                measurement=ingredient["measurement"]
+                measurement=ingredient["measurement"],
             )
+
         return fn
 
     @staticmethod
@@ -22,16 +24,18 @@ class RecipeService:
         """Get recipe IDs that match the ingredient filters"""
         if len(ingredients) == 0:
             return None
-        
+
         # Build Q objects for ingredient name filtering
         ingredient_filters = Q()
         for ingredient in ingredients:
             ingredient_filters |= Q(name__icontains=ingredient, deleted=False)
-        
-        recipe_ids = Ingredient.objects.filter(
-            ingredient_filters
-        ).values_list('recipe_id', flat=True).distinct()
-        
+
+        recipe_ids = (
+            Ingredient.objects.filter(ingredient_filters)
+            .values_list("recipe_id", flat=True)
+            .distinct()
+        )
+
         return list(recipe_ids)
 
     @staticmethod
@@ -46,24 +50,24 @@ class RecipeService:
 
         # Clean optional title
         title = xstr(title_opt)
-        
+
         # Start recipe query
         query = Recipe.objects.filter(deleted=False)
-        
+
         # Filter by title if provided
         if title:
             query = query.filter(title__icontains=title)
-        
+
         # Filter by user_id if needed
         if user_id:
             query = query.filter(user_id=user_id)
-        
+
         # If we have ingredient filters, add additional filter to the initial query
         if filtered_ingredients:
             query = query.filter(id__in=filtered_ingredients)
 
         # Order by created_at descending
-        query = query.order_by('-created_at')
+        query = query.order_by("-created_at")
 
         # Paginate
         paginator = Paginator(query, per_page)
@@ -73,10 +77,9 @@ class RecipeService:
         recipe_ids_on_page = [r.id for r in paginated_recipes]
         ingredients_per_recipe = {}
         for recipe_id in recipe_ids_on_page:
-            ingredients = Ingredient.objects.filter(
-                recipe_id=recipe_id,
-                deleted=False
-            ).order_by('name').all()
+            ingredients = (
+                Ingredient.objects.filter(recipe_id=recipe_id, deleted=False).order_by("name").all()
+            )
             ingredients_per_recipe[recipe_id] = list(ingredients)
 
         return (paginated_recipes, ingredients_per_recipe)
@@ -100,20 +103,17 @@ class RecipeService:
                 recipe=new_recipe,
                 name=ingredient_data["name"],
                 amount=float(ingredient_data["amount"]),
-                measurement=ingredient_data["measurement"]
+                measurement=ingredient_data["measurement"],
             )
             new_ingredients.append(ingredient)
-        
+
         Ingredient.objects.bulk_create(new_ingredients)
         return True
 
     @staticmethod
     def mark_recipe_as_deleted(user_id, recipe_id):
         """Mark a recipe as deleted"""
-        Recipe.objects.filter(
-            user_id=user_id,
-            id=recipe_id
-        ).update(deleted=True)
+        Recipe.objects.filter(user_id=user_id, id=recipe_id).update(deleted=True)
         return True
 
     @staticmethod
@@ -121,10 +121,9 @@ class RecipeService:
         """Find a recipe by ID with its ingredients"""
         try:
             recipe = Recipe.objects.get(id=recipe_id, deleted=False)
-            ingredients = Ingredient.objects.filter(
-                recipe_id=recipe_id,
-                deleted=False
-            ).order_by('name').all()
+            ingredients = (
+                Ingredient.objects.filter(recipe_id=recipe_id, deleted=False).order_by("name").all()
+            )
             return (recipe, list(ingredients))
         except Recipe.DoesNotExist:
             return (None, [])
@@ -141,10 +140,7 @@ class RecipeService:
         )
 
         # Mark existing ingredients as deleted
-        Ingredient.objects.filter(
-            recipe_id=recipe_id,
-            deleted=False
-        ).update(deleted=True)
+        Ingredient.objects.filter(recipe_id=recipe_id, deleted=False).update(deleted=True)
 
         # Create new ingredients
         recipe = Recipe.objects.get(id=recipe_id)
@@ -154,9 +150,9 @@ class RecipeService:
                 recipe=recipe,
                 name=ingredient_data["name"],
                 amount=float(ingredient_data["amount"]),
-                measurement=ingredient_data["measurement"]
+                measurement=ingredient_data["measurement"],
             )
             new_ingredients.append(ingredient)
-        
+
         Ingredient.objects.bulk_create(new_ingredients)
         return True

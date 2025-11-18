@@ -41,6 +41,10 @@ A multi-page web application built with Django that allows users to discover, sh
 - **StrEnum** - String enumeration support
 - **SQLite** - Lightweight database
 
+### Development Tools
+- **Ruff** - Fast Python linter and formatter
+- **Black** - Code formatter (via Ruff)
+
 ### Frontend
 - **Tailwind CSS** - Utility-first CSS framework
 - **Django Templates** - Server-side rendering
@@ -282,6 +286,45 @@ The following test accounts are available for demonstration:
 
 ## 🔧 Development
 
+### Code Formatting and Linting
+
+This project uses **Ruff** for linting and formatting. All code follows PEP 8 style guidelines.
+
+#### Install Linting Tools
+
+```bash
+pip install ruff black
+```
+
+#### Format Code
+
+```bash
+# Format all Python files
+cd source
+ruff format .
+
+# Or use the Makefile
+make format
+```
+
+#### Lint Code
+
+```bash
+# Lint and auto-fix issues
+cd source
+ruff check --fix .
+
+# Or use the Makefile
+make lint
+```
+
+#### Run All Checks
+
+```bash
+# Format and lint in one command
+make check
+```
+
 ### Running Migrations
 
 After making model changes:
@@ -312,7 +355,12 @@ python manage.py migrate       # Recreate database
 
 ### Code Style
 
-The project follows Django best practices and PEP 8 style guidelines.
+The project follows Django best practices and PEP 8 style guidelines. Configuration files:
+
+- `pyproject.toml` - Ruff and Black configuration
+- `.ruffignore` - Files to exclude from linting
+- `.editorconfig` - Editor configuration for consistent formatting
+- `Makefile` - Convenient commands for common tasks
 
 ## 📝 Project Status
 

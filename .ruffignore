@@ -1,0 +1,10 @@
+# Ignore migrations
+migrations/
+*.pyc
+__pycache__/
+
+# Ignore old Flask files (if any remain)
+app.py
+routes.py
+login_manager.py
+

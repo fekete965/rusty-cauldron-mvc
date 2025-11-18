@@ -34,9 +34,9 @@ def has_symbol(string: str):
 
 def is_password_applicable(password: str):
     """Password has to contain:
-        - at least 1 uppercase character
-        - at least 1 digit
-        - at least 1 special character
+    - at least 1 uppercase character
+    - at least 1 digit
+    - at least 1 special character
     """
 
     return has_upper(password) and has_digit(password) and has_symbol(password)
@@ -49,8 +49,10 @@ def validate_password(password: str, confirmation: str):
     if password != confirmation:
         return "The passwords aren't match"
     if not is_password_applicable(password):
-        return "The password has to contain at least 1 uppercase character," +\
-               "a number and a special character"
+        return (
+            "The password has to contain at least 1 uppercase character,"
+            + "a number and a special character"
+        )
 
     return None
 
@@ -61,20 +63,20 @@ def validateIngredients(ingredient_list: list[dict]):
         name = ingredient.get("name")
         amount = ingredient.get("amount")
         measurement = ingredient.get("measurement")
-        
+
         if not name or not amount or not measurement:
             return "Name, amount and measurements are required for any ingredients"
         if measurement not in COOKING_MEASUREMENT.nameList():
             return "Invalid measurement type"
-        
+
     return None
 
 
 def xstr(s):
     if s is None:
-        return ''
+        return ""
     return str(s)
 
 
 def makeIngredientData(dataTuple):
-    return { "name": dataTuple[0], "amount": dataTuple[1] ,"measurement": dataTuple[2] }
+    return {"name": dataTuple[0], "amount": dataTuple[1], "measurement": dataTuple[2]}

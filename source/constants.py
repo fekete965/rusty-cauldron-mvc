@@ -1,28 +1,31 @@
 from strenum import StrEnum
 
-RUSTY_CAULDRON_KEY = 'RUSTY_CAULDRON_KEY'
+RUSTY_CAULDRON_KEY = "RUSTY_CAULDRON_KEY"
 MIN_PASSWORD_LENGTH = 8
+
 
 class ExtendedEnum(StrEnum):
     @classmethod
     def nameList(cls):
-        return list(map(lambda c: c.name, cls))
-    
+        return [c.name for c in cls]
+
     @classmethod
     def valueList(cls):
-        return list(map(lambda c: c.value, cls))
+        return [c.value for c in cls]
+
 
 class ROUTES(ExtendedEnum):
     Home = "/"
     Signup = "/signup"
     Login = "/login"
     Logout = "/logout"
-    Recipes= "/recipes"
+    Recipes = "/recipes"
     AddRecipe = "/recipes/new"
     Recipe = "/recipes/<recipe_id>"
     UpdateRecipe = "/recipes/<recipe_id>/update"
     DeleteRecipe = "/recipes/<recipe_id>/delete"
     MyRecipes = "/my-recipes"
+
 
 class COOKING_MEASUREMENT(ExtendedEnum):
     cl = "centilitre"

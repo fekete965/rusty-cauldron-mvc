@@ -1,0 +1,163 @@
+{% macro input(name, step, id='', min='', placeholder='', value='', type='text') -%}
+  <input 
+    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+    type="{{ type }}"
+    name="{{ name }}"
+    min="{{ min }}"
+    value="{{ value|e }}"
+    {% if id != '' %}
+      id="{{ id }}"
+    {% endif %}
+    step="{{ step }}"
+    placeholder="{{ placeholder }}"
+  >
+{%- endmacro %}
+
+{% macro label(for, label) -%}
+  <label class="block text-sm font-medium text-gray-900" for="{{ for }}">{{ label }}</label>
+{%- endmacro %}
+
+{% macro inputWithLabel(name, step, label, min='', placeholder='', value='', type='text') -%}
+    <label class="block text-sm font-medium text-gray-900" for="{{ name }}">{{ label }}</label>
+    <input 
+      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+      type="{{ type }}"
+      name="{{ name }}"
+      min="{{ min }}"
+      id="{{ name }}"
+      value="{{ value|e }}"
+      step="{{ step }}"
+      placeholder="{{ placeholder }}"
+    >
+{%- endmacro %}
+
+{% macro textarea(name, placeholder='', id='', value='', rows='10') %}
+  <textarea\
+    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+    rows="{{ rows }}"
+    name="{{ name }}"
+    {% if id != '' %}
+      id="{{ form }}"
+    {% endif %}
+    placeholder="{{ placeholder }}"
+  >{{ value }}</textarea>
+{%- endmacro %}
+
+{% macro textareaWithLabel(name, label, placeholder='', id='', value='', rows='10') %}
+  <label class="block text-sm font-medium text-gray-900" for="{{ name }}">{{ label }}</label>
+  <textarea
+    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+    rows="{{ rows }}"
+    name="{{ name }}"
+    id="{{ name }}"
+    placeholder="{{ placeholder }}"
+  >{{ value }}</textarea>
+{%- endmacro %}
+
+{% macro button(text, form="", type="submit", onclick='') %}
+  <button
+    class="flex justify-center leading-[1.125rem] text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-6 py-3 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+    type="{{ type }}"
+    {% if form != '' %}
+      form="{{ form }}"
+    {% endif %}
+    onclick="{{ onclick }}"
+  >
+    {{ text }}
+  </button>
+{%- endmacro %}
+
+{% macro pagination(show_pagination, aria_label, first, last, total, has_prev, prev_num, iter_pages, current_page, has_next, next_num, form_id) %}
+  {% if show_pagination %}
+  <nav class="flex flex-col col-span-4" aria-label="{{ aria_label }}">
+    <div class="text-xl text-center">{{ first }} - {{ last }} of {{ total }}</div>
+    <ul class="mx-auto inline-flex items-center -space-x-px">
+      <li>
+        <button 
+          {% if form_id %}
+            form="{{ form_id }}"
+          {% endif %}
+          {% if has_prev %}
+            type="submit"
+          {% else %}
+            disabled
+            type="button"
+          {% endif %}
+          name="page"
+          class="block px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+          value={{ prev_num }}
+        >
+          <span class="sr-only">Previous</span>
+          <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+        </button>
+      </li>
+      {% for page in iter_pages() %}
+        {% if page %}
+          {% if page != current_page %}
+          <li>
+            <button
+            {% if form_id %}
+              form="{{ form_id }}"
+            {% endif %}
+            name="page"
+            type="submit"
+            aria-current="page"
+            class="z-10 px-3 py-2 leading-tight text-blue-600 border border-blue-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
+            value={{ page }}
+            >
+              {{ page }}
+            </button>
+          </li>
+          {% else %}
+            <li>
+              <button
+              {% if form_id %}
+                form="{{ form_id }}"
+              {% endif %}
+              name="page"
+              disabled
+              type="button"
+              class="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+              value="{{ page }}"
+              >
+                {{ page }}
+              </button>
+            </li>
+          {% endif %}
+        {% else %}
+        <li>
+          <button
+          name="page"
+          disabled
+          type="button"
+          aria-current="page"
+          class="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+          >
+            ...
+          </button>
+        </li>
+        {% endif %}
+      {% endfor %}
+      <li>
+        <button
+          {% if form_id %}
+            form="{{ form_id }}"
+          {% endif %}
+          {% if has_next %}
+            type="submit"
+          {% else %}
+            disabled
+            type="button"
+          {% endif %}
+          name="page"
+          class="block px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+          value="{{ next_num }}"
+        >
+          <span class="sr-only">Next</span>
+          <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+        </button>
+      </li>
+    </ul>
+  </nav>
+  {% endif %}
+{%- endmacro %}
